@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.junit.After;
 import org.junit.Assert;
@@ -421,7 +422,7 @@ public class Any23DetectorTest {
   }
 
   /**
-   * Verifies the detection of a specific MIME based on content, filename and metadata MIME type.
+   * Verifies the detection of a specific MIME based on content, metadata MIME type.
    *
    * @param expectedMimeType
    * @param contentTypeHeader
@@ -429,8 +430,9 @@ public class Any23DetectorTest {
    */
   private void detectMIMETypeByMimeTypeHint(String expectedMimeType, String contentTypeHeader)
   throws IOException {
-      String detectedMimeType = detector.detect(expectedMimeType, MIMEType.parse(contentTypeHeader)
-      ).toString();
+      Metadata md = new Metadata();
+      md.add("contentTypeHeader", contentTypeHeader);
+      String detectedMimeType = detector.detect(new ByteArrayInputStream(expectedMimeType.getBytes("UTF-8")), md).toString();
       Assert.assertEquals(expectedMimeType, detectedMimeType);
   }
 
@@ -445,7 +447,9 @@ public class Any23DetectorTest {
       String detectedMimeType;
       for (String test : manifest) {
           InputStream is = new BufferedInputStream(this.getClass().getResourceAsStream(test));
-          detectedMimeType = detector.guessMIMEType(test, is, null).toString();
+          Metadata md = new Metadata();
+          md.add("expectedMimeType", expectedMimeType);
+          detectedMimeType = detector.detect(is, md).toString();
           if (test.contains("error"))
               Assert.assertNotSame(expectedMimeType, detectedMimeType);
           else {
