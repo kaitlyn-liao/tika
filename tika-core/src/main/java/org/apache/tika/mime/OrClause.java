@@ -20,7 +20,11 @@ import java.util.List;
 
 class OrClause implements Clause {
 
-    private final List<Clause> clauses;
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 2089222390646997974L;
+      private final List<Clause> clauses;
 
     OrClause(List<Clause> clauses) {
         this.clauses = clauses;

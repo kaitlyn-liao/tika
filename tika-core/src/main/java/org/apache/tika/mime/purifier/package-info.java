@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,27 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.tika.exception;
 
-public class EncryptedDocumentException extends TikaException {
-    /**
-     * Generated serial ID
-     */
-    private static final long serialVersionUID = -4640940743548761225L;
-
-    public EncryptedDocumentException() {
-        super("Unable to process: document is encrypted");
-    }
-
-    public EncryptedDocumentException(Throwable th) {
-        super("Unable to process: document is encrypted", th);
-    }
-
-    public EncryptedDocumentException(String info) {
-        super(info);
-    }
-    
-    public EncryptedDocumentException(String info, Throwable th) {
-        super(info, th);
-    }
-}
+/**
+ * This package contains all the logic to implement your own 
+ * {@link org.apache.tika.mime.purifier.Purifier}.
+ * Each {@link org.apache.tika.mime.purifier.Purifier} is 
+ * responsible for modifying the file <b>before</b>
+ * its <i>MIME type</i> is detected.
+ */
+package org.apache.tika.mime.purifier;

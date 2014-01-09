@@ -21,6 +21,11 @@ package org.apache.tika.exception;
  */
 public class TikaException extends Exception {
 
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 6169468760011493332L;
+
     public TikaException(String msg) {
         super(msg);
     }

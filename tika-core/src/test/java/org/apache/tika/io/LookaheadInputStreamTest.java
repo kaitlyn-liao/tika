@@ -31,6 +31,7 @@ public class LookaheadInputStreamTest {
 
     @Test
     public void testNullStream() throws IOException {
+        @SuppressWarnings("resource")
         InputStream lookahead = new LookaheadInputStream(null, 100);
         assertEquals(-1, lookahead.read());
     }

@@ -31,6 +31,11 @@ import org.apache.tika.mime.MediaType;
 public class TypeDetector implements Detector {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 6963170539158578784L;
+
+    /**
      * Detects the content type of an input document based on a type hint
      * given in the input metadata. The CONTENT_TYPE attribute of the given
      * input metadata is expected to contain the type of the input document.

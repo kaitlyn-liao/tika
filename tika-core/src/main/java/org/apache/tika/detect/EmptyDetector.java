@@ -28,6 +28,11 @@ import org.apache.tika.mime.MediaType;
 public class EmptyDetector implements Detector {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -2739938917225728418L;
+    
+    /**
      * Singleton instance of this class.
      */
     public static final EmptyDetector INSTANCE = new EmptyDetector();

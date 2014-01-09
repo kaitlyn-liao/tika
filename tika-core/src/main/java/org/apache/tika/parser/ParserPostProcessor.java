@@ -36,6 +36,11 @@ import org.xml.sax.SAXException;
 public class ParserPostProcessor extends ParserDecorator {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 1082816055239659736L;
+
+    /**
      * Creates a post-processing decorator for the given parser.
      *
      * @param parser the parser to be decorated

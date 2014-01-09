@@ -43,6 +43,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class NetworkParser extends AbstractParser {
 
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -5416099113508995890L;
+
     private final URI uri;
 
     private final Set<MediaType> supportedTypes;
