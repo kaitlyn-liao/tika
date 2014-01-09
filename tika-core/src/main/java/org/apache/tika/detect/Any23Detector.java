@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.mime.purifier.Purifier;
 import org.openrdf.rio.RDFFormat;
@@ -34,6 +36,8 @@ public class Any23Detector implements Detector {
   private Purifier purifier;
   
   private Tika tika;
+  
+  private static MimeTypes types;
 
   public static final String CSV_MIMETYPE = "text/csv";
 
@@ -81,7 +85,7 @@ public class Any23Detector implements Detector {
     String type;
     tika = new Tika();
     try {
-      final String mt = tika.detect(input, metadata);
+      final String mt = guessMimeTypeByInputAndMeta(input, metadata);
       if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
         type = mt;
       } else {
@@ -103,6 +107,78 @@ public class Any23Detector implements Detector {
       throw new RuntimeException("Error while retrieving mime type.", ioe);
     }
     return MediaType.parse(type);
+  }
+
+  /**
+   * Automatically detects the MIME type of a document based on magic
+   * markers in the stream prefix and any given metadata hints.
+   * <p/>
+   * The given stream is expected to support marks, so that this method
+   * can reset the stream to the position it was in before this method
+   * was called.
+   *
+   * @param stream   document stream
+   * @param metadata metadata hints
+   * @return MIME type of the document
+   * @throws IOException if the document stream could not be read
+   */
+  private String guessMimeTypeByInputAndMeta(InputStream stream, final Metadata metadata)
+  throws IOException {
+      if (stream != null) {
+          final String type = tika.detect(stream);
+          if ( type != null && ! isGenericMIMEType(type) ) {
+              return type;
+          }
+      }
+
+      // Determines the MIMEType based on Content-Type hint if available.
+      final String contentType = metadata.get(Metadata.CONTENT_TYPE);
+      String candidateMIMEType = null;
+      if (contentType != null) {
+          try {
+              MimeType type = types.forName(contentType);
+              if (type != null) {
+                  if( ! isPlainMIMEType(type.getName()) ) {
+                      return type.getName();
+                  } else {
+                      candidateMIMEType = type.getName();
+                  }
+              }
+          }
+          catch (MimeTypeException mte) {
+              // Malformed ocntent-type value, ignore.
+          }
+      }
+
+      // Determines the MIMEType based on resource name hint if available.
+      final String resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
+      if (resourceName != null) {
+          MimeType type = types.getMimeType(resourceName);
+          if (type != null) {
+              return type.getName();
+          }
+      }
+
+      // Finally, use the default type if no matches found
+      if(candidateMIMEType != null) {
+          return candidateMIMEType;
+      } else {
+          return MimeTypes.OCTET_STREAM;
+      }
+  }
+
+  private boolean isGenericMIMEType(String type) {
+    return
+        isPlainMIMEType(type)
+            ||
+        type.equals(MimeTypes.XML);
+  }
+
+  private boolean isPlainMIMEType(String type) {
+    return
+        type.equals(MimeTypes.OCTET_STREAM)
+            ||
+        type.equals(MimeTypes.PLAIN_TEXT);
   }
 
   /**

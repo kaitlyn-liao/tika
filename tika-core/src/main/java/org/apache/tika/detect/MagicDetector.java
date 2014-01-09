@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
-import org.apache.tika.mime.purifier.Purifier;
-import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
+//import org.apache.tika.mime.purifier.Purifier;
+//import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 
 /**
  * Content type detection based on magic bytes, i.e. type-specific patterns
@@ -361,15 +361,20 @@ public class MagicDetector implements Detector {
             return MediaType.OCTET_STREAM;
         }
 
+        // TODO Determine whether WhiteSpacesPurifier is a suitable
+        // substitute as oppose to skipping bytes at the beginning
+        // of the input stream. Right now, implementing both
+        // seems to lead to inaccurate detection.
+        
         //Purify the InputStream with the 'default'
         //WhiteSpacePurifier. In the future we could make
         //this configurable.
-        Purifier purifier = new WhiteSpacesPurifier();
-        try {
-          purifier.purify(input);
-        } catch (IOException e) {
-          throw new RuntimeException("Error while purifying the provided InputStream", e);
-        }
+        //Purifier purifier = new WhiteSpacesPurifier();
+        //try {
+        //  purifier.purify(input);
+        //} catch (IOException e) {
+        //  throw new RuntimeException("Error while purifying the provided InputStream", e);
+        //}
         
         input.mark(offsetRangeEnd + length);
         try {

@@ -109,6 +109,12 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
      * (best first).
      */
     private List<String> extensions = null;
+    
+    //private final String type;
+
+    private final String subtype;
+    
+    private final double q;
 
     /**
      * Creates a media type with the give name and containing media type
@@ -124,6 +130,12 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
             throw new IllegalArgumentException("Media type name is missing");
         }
         this.type = type;
+    }
+    
+    private MIMEType(String type, String subtype, double q) {
+      this.type = type;
+      this.subtype = subtype;
+      this.q = q;
     }
 
     /**
@@ -458,6 +470,30 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
         if (!extensions.contains(extension)) {
             extensions.add(extension);
         }
+    }
+
+    public String getMajorType() {
+      return (type.toString() == null ? "*" : type.toString());
+    }
+    
+    public String getSubtype() {
+      return (subtype == null ? "*" : subtype);
+  }
+
+    public String getFullType() {
+      return getMajorType() + "/" + getSubtype();
+    }
+
+    public double getQuality() {
+      return q;
+    }
+
+    public boolean isAnyMajorType() {
+      return type == null;
+    }
+
+    public boolean isAnySubtype() {
+      return subtype == null;
     }
 
 }

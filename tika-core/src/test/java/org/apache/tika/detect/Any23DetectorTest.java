@@ -27,12 +27,17 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.rio.RDFFormat;
+
+import com.sun.xml.internal.ws.wsdl.writer.document.Types;
 
 public class Any23DetectorTest {
 
@@ -119,7 +124,7 @@ public class Any23DetectorTest {
   }
 
   private List<String> manifestRss1() {
-      return Arrays.asList("/application/rss1/test1");
+      return Arrays.asList("test1");
   }
 
   @Test
@@ -422,7 +427,7 @@ public class Any23DetectorTest {
   }
 
   /**
-   * Verifies the detection of a specific MIME based on content, metadata MIME type.
+   * Verifies the detection of a specific MIME based on content and metadata MIME type.
    *
    * @param expectedMimeType
    * @param contentTypeHeader
@@ -430,9 +435,7 @@ public class Any23DetectorTest {
    */
   private void detectMIMETypeByMimeTypeHint(String expectedMimeType, String contentTypeHeader)
   throws IOException {
-      Metadata md = new Metadata();
-      md.add("contentTypeHeader", contentTypeHeader);
-      String detectedMimeType = detector.detect(new ByteArrayInputStream(expectedMimeType.getBytes("UTF-8")), md).toString();
+      String detectedMimeType = detector.detect(null, MediaType.parse(contentTypeHeader));
       Assert.assertEquals(expectedMimeType, detectedMimeType);
   }
 
