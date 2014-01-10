@@ -460,10 +460,6 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
         }
     }
 
-    public String getMajorType() {
-      return (type.toString() == null ? "*" : type.toString());
-    }
-    
     public String getSubtype() {
       return type.getSubtype();
   }
