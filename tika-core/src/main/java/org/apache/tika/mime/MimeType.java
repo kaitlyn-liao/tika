@@ -110,12 +110,6 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
      */
     private List<String> extensions = null;
     
-    //private final String type;
-
-    private final String subtype;
-    
-    private final double q;
-
     /**
      * Creates a media type with the give name and containing media type
      * registry. The name is expected to be valid and normalized to lower
@@ -132,12 +126,6 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
         this.type = type;
     }
     
-    private MIMEType(String type, String subtype, double q) {
-      this.type = type;
-      this.subtype = subtype;
-      this.q = q;
-    }
-
     /**
      * Returns the normalized media type name.
      *
@@ -477,23 +465,11 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
     }
     
     public String getSubtype() {
-      return (subtype == null ? "*" : subtype);
+      return type.getSubtype();
   }
 
     public String getFullType() {
-      return getMajorType() + "/" + getSubtype();
-    }
-
-    public double getQuality() {
-      return q;
-    }
-
-    public boolean isAnyMajorType() {
-      return type == null;
-    }
-
-    public boolean isAnySubtype() {
-      return subtype == null;
+        return type.getType();
     }
 
 }
