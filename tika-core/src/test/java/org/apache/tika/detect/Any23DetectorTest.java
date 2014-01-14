@@ -25,8 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MimeType;
-import org.apache.tika.mime.MimeTypes;
+import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.junit.After;
 import org.junit.Assert;
@@ -223,6 +222,8 @@ public class Any23DetectorTest {
   }
 
   @Test
+  @Ignore("TODO when Any23 csv is ported to Tika")
+  //TODO
   public void testDetectCSVByContent() throws Exception {
       detectMIMEtypeByContent(CSV, manifestCsv());
   }
@@ -435,17 +436,10 @@ public class Any23DetectorTest {
    */
   private void detectMIMETypeByMimeTypeHint(String expectedMimeType, String contentTypeHeader)
   throws IOException {
-<<<<<<< HEAD
-      Metadata md = new Metadata();
-      //md.set(MimeTypes, value);
-      String detectedMimeType = detector.detect(null, md).toString();
-      Assert.assertEquals(expectedMimeType, detectedMimeType);
-=======
       Metadata metadata = new Metadata();
       metadata.set(Metadata.RESOURCE_NAME_KEY, MediaType.parse(contentTypeHeader).getBaseType().toString());
       MediaType detectedMimeType = detector.detect(null, metadata);
       Assert.assertEquals(expectedMimeType, detectedMimeType.toString());
->>>>>>> 8928f6d0122039f78c2d546306c2a0572dbcfd81
   }
 
   /**
