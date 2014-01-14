@@ -435,10 +435,17 @@ public class Any23DetectorTest {
    */
   private void detectMIMETypeByMimeTypeHint(String expectedMimeType, String contentTypeHeader)
   throws IOException {
+<<<<<<< HEAD
       Metadata md = new Metadata();
       //md.set(MimeTypes, value);
       String detectedMimeType = detector.detect(null, md).toString();
       Assert.assertEquals(expectedMimeType, detectedMimeType);
+=======
+      Metadata metadata = new Metadata();
+      metadata.set(Metadata.RESOURCE_NAME_KEY, MediaType.parse(contentTypeHeader).getBaseType().toString());
+      MediaType detectedMimeType = detector.detect(null, metadata);
+      Assert.assertEquals(expectedMimeType, detectedMimeType.toString());
+>>>>>>> 8928f6d0122039f78c2d546306c2a0572dbcfd81
   }
 
   /**

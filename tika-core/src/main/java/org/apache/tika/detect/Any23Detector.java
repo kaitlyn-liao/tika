@@ -3,6 +3,7 @@
  */
 package org.apache.tika.detect;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,9 +77,15 @@ public class Any23Detector implements Detector {
 
     if(input != null) {
       try {
+        if(!input.markSupported()) {
+            input = new BufferedInputStream(input);
+        }
+        input.mark(Integer.MAX_VALUE);
         this.purifier.purify(input);
       } catch (IOException e) {
         throw new RuntimeException("Error while purifying the provided input", e);
+      } finally {
+          input.reset();
       }
     }
 
