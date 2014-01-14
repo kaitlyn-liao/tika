@@ -180,6 +180,60 @@ public class Any23Detector implements Detector {
             ||
         type.equals(MimeTypes.PLAIN_TEXT);
   }
+  
+  /**
+   * Estimates the <code>MIME</code> type of the content of input file.
+   * The <i>input</i> stream must be resettable.
+   *
+   * @param fileName name of the data source.
+   * @param input <code>null</code> or a <b>resettable</i> input stream containing data.
+   * @param mimeTypeFromMetadata mimetype declared in metadata.
+   * @return the supposed mime type or <code>null</code> if nothing appropriate found.
+   * @throws IllegalArgumentException if <i>input</i> is not <code>null</code> and is not resettable.
+   */
+  public MimeType guessMIMEType(
+          String fileName,
+          InputStream input,
+          MimeType mimeTypeFromMetadata
+  ) {
+      if(input != null) {
+          try {
+              this.purifier.purify(input);
+          } catch (IOException e) {
+              throw new RuntimeException("Error while purifying the provided input", e);
+          }
+      }
+
+      final Metadata meta = new Metadata();
+      if (mimeTypeFromMetadata != null)
+          meta.set(Metadata.CONTENT_TYPE, mimeTypeFromMetadata.getFullType());
+      if (fileName != null)
+          meta.set(Metadata.RESOURCE_NAME_KEY, fileName);
+
+      String type;
+      try {
+          final String mt = guessMimeTypeByInputAndMeta(input, meta);
+          if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
+              type = mt;
+          } else {
+              if( checkN3Format(input) ) {
+                  type = RDFFormat.N3.getDefaultMIMEType();
+              } else if( checkNQuadsFormat(input) ) {
+                  type = RDFFormat.NQUADS.getDefaultMIMEType();
+              } else if( checkTurtleFormat(input) ) {
+                  type = RDFFormat.TURTLE.getDefaultMIMEType();
+              //} else if( checkCSVFormat(input) ) {
+              //    type = CSV_MIMETYPE;
+              }
+              else {
+                  type = MimeTypes.OCTET_STREAM; 
+              }
+          }
+      } catch (IOException ioe) {
+          throw new RuntimeException("Error while retrieving mime type.", ioe);
+      }
+      return MimeType.parse(type);
+  }
 
   /**
    * N3 patterns.
