@@ -109,12 +109,16 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
      * (best first).
      */
     private List<String> extensions = null;
-    
-    //private final String type;
 
-    private final String subtype;
+    /**
+     * The normalized media subtype name.
+     */
+    private String subtype  = null;
     
-    private final double q;
+    /**
+     * The quality value for the media type.
+     */
+    private double q = 0;
 
     /**
      * Creates a media type with the give name and containing media type
@@ -132,7 +136,23 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
         this.type = type;
     }
     
-    private MIMEType(String type, String subtype, double q) {
+    /**
+     * Creates a media type with the give name and containing media type
+     * registry. The name is expected to be valid and normalized to lower
+     * case. This constructor should only be called by
+     * {@link MimeTypes#forName(String)} to keep the media type registry
+     * up to date. In addition parameters for media subtype and quality
+     * are provided.
+     * An example of a mime type containg these parameters is: 
+     * <code>application/rdf+xml;q=0.9</code> 
+     * @param type normalized media type name
+     * @param subtype normalized media subtype name
+     * @param q quality value for the media type
+     */
+    MimeType(MediaType type, String subtype, double q) {
+      if (type == null) {
+        throw new IllegalArgumentException("Media type name is missing");
+      }
       this.type = type;
       this.subtype = subtype;
       this.q = q;

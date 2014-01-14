@@ -153,9 +153,9 @@ public class Any23Detector implements Detector {
       // Determines the MIMEType based on resource name hint if available.
       final String resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
       if (resourceName != null) {
-          MimeType type = types.getMimeType(resourceName);
+          String type = tika.detect(resourceName);
           if (type != null) {
-              return type.getName();
+              return MediaType.parse(type).toString();
           }
       }
 
@@ -191,7 +191,7 @@ public class Any23Detector implements Detector {
    * @return the supposed mime type or <code>null</code> if nothing appropriate found.
    * @throws IllegalArgumentException if <i>input</i> is not <code>null</code> and is not resettable.
    */
-  public MimeType guessMIMEType(
+  public MediaType guessMIMEType(
           String fileName,
           InputStream input,
           MimeType mimeTypeFromMetadata
@@ -232,7 +232,7 @@ public class Any23Detector implements Detector {
       } catch (IOException ioe) {
           throw new RuntimeException("Error while retrieving mime type.", ioe);
       }
-      return MimeType.parse(type);
+      return MediaType.parse(type);
   }
 
   /**

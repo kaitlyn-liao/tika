@@ -16,8 +16,6 @@
  */
 package org.apache.tika.detect;
 
-import static org.junit.Assert.*;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,17 +25,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
-import org.apache.tika.mime.MimeType;
-import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.rio.RDFFormat;
-
-import com.sun.xml.internal.ws.wsdl.writer.document.Types;
 
 public class Any23DetectorTest {
 
@@ -382,22 +375,22 @@ public class Any23DetectorTest {
 
   private void assertN3Detection(String n3Exp) throws IOException {
       ByteArrayInputStream bais = new ByteArrayInputStream( n3Exp.getBytes() );
-      assertTrue( Any23Detector.checkN3Format(bais) );
+      Assert.assertTrue( Any23Detector.checkN3Format(bais) );
   }
 
   private void assertN3DetectionFail(String n3Exp) throws IOException {
       ByteArrayInputStream bais = new ByteArrayInputStream( n3Exp.getBytes() );
-      assertFalse( Any23Detector.checkN3Format(bais) );
+      Assert.assertFalse( Any23Detector.checkN3Format(bais) );
   }
 
   private void assertNQuadsDetection(String n4Exp) throws IOException {
       ByteArrayInputStream bais = new ByteArrayInputStream( n4Exp.getBytes() );
-      assertTrue( Any23Detector.checkNQuadsFormat(bais) );
+      Assert.assertTrue( Any23Detector.checkNQuadsFormat(bais) );
   }
 
   private void assertNQuadsDetectionFail(String n4Exp) throws IOException {
       ByteArrayInputStream bais = new ByteArrayInputStream( n4Exp.getBytes() );
-      assertFalse( Any23Detector.checkNQuadsFormat(bais) );
+      Assert.assertFalse( Any23Detector.checkNQuadsFormat(bais) );
   }
 
   /**
@@ -435,7 +428,7 @@ public class Any23DetectorTest {
    */
   private void detectMIMETypeByMimeTypeHint(String expectedMimeType, String contentTypeHeader)
   throws IOException {
-      String detectedMimeType = detector.detect(null, MediaType.parse(contentTypeHeader));
+      String detectedMimeType = detector.detect(Any23Detector.class.getResourceAsStream(contentTypeHeader), new Metadata()).toString();
       Assert.assertEquals(expectedMimeType, detectedMimeType);
   }
 
