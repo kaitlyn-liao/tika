@@ -439,7 +439,7 @@ public class Any23DetectorTest {
       Metadata metadata = new Metadata();
       metadata.set(Metadata.RESOURCE_NAME_KEY, MediaType.parse(contentTypeHeader).getBaseType().toString());
       MediaType detectedMimeType = detector.detect(null, metadata);
-      Assert.assertEquals(expectedMimeType, detectedMimeType.toString());
+      Assert.assertEquals("We expect: " + expectedMimeType, expectedMimeType, detectedMimeType.toString());
   }
 
   /**
@@ -454,7 +454,7 @@ public class Any23DetectorTest {
       for (String test : manifest) {
           InputStream is = new BufferedInputStream(this.getClass().getResourceAsStream(test));
           Metadata md = new Metadata();
-          md.add("expectedMimeType", expectedMimeType);
+          md.add(Metadata.CONTENT_TYPE, expectedMimeType);
           detectedMimeType = detector.detect(is, md).toString();
           if (test.contains("error"))
               Assert.assertNotSame(expectedMimeType, detectedMimeType);
