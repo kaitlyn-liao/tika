@@ -513,7 +513,7 @@ public class TikaDetectionTest {
         assertEquals("application/vnd.zzazz.deck+xml", tika.detect("x.zaz"));
         assertEquals("application/voicexml+xml", tika.detect("x.vxml"));
         assertEquals("application/winhlp", tika.detect("x.hlp"));
-        assertEquals("application/wsdl+xml", tika.detect("x.wsdl"));
+        assertEquals("application/x-wsdl", tika.detect("x.wsdl"));
         assertEquals("application/wspolicy+xml", tika.detect("x.wspolicy"));
         assertEquals("application/x-abiword", tika.detect("x.abw"));
         assertEquals("application/x-ace-compressed", tika.detect("x.ace"));

@@ -115,22 +115,14 @@ public class Any23Detector implements Detector {
       metadata = new Metadata();
     }
     MediaType mime = MediaType.parse(metadata.get(Metadata.CONTENT_TYPE));;
-    //try {
-    //  mime = MediaType.parse(metadata.get(Metadata.CONTENT_TYPE));
-      if (mime != null) {
-        metadata.set(Metadata.CONTENT_TYPE, mime.getBaseType().toString());
-      }
-    //} catch (Exception e) {
-    //  e.printStackTrace();
-    //}
-    String resourceName;
-    try {
-      resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
-      if (input != null) {
-        metadata.set(Metadata.RESOURCE_NAME_KEY, resourceName);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+    
+    if (mime != null) {
+      metadata.set(Metadata.CONTENT_TYPE, mime.getBaseType().toString());
+    }
+
+    String resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
+    if (input != null) {
+      metadata.set(Metadata.RESOURCE_NAME_KEY, resourceName);
     }
 
     String type;
