@@ -42,6 +42,11 @@ import org.apache.tika.mime.MediaType;
 public class NameDetector implements Detector {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 2076296572544812146L;
+    
+    /**
      * The regular expression patterns used for type detection.
      */
     private final Map<Pattern, MediaType> patterns;

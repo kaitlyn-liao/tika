@@ -37,6 +37,11 @@ import org.xml.sax.SAXException;
 public class DelegatingParser extends AbstractParser {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -3155013638985767859L;
+
+    /**
      * Returns the parser instance to which parsing tasks should be delegated.
      * The default implementation looks up the delegate parser from the given
      * parse context, and uses an {@link EmptyParser} instance as a fallback.

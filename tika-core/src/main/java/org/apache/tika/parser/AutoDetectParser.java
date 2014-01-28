@@ -28,6 +28,8 @@ import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.MediaTypeRegistry;
+import org.apache.tika.mime.purifier.Purifier;
+import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.apache.tika.sax.SecureContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -51,29 +53,53 @@ public class AutoDetectParser extends CompositeParser {
         this(TikaConfig.getDefaultConfig());
     }
 
+    /**
+     * Creates an auto-detecting parser instance using the default Tika
+     * configuration with the addition of a specific 
+     * {@link org.apache.tika.detect.Detector} implementation.
+     * @param detector a user defined detector.
+     */
     public AutoDetectParser(Detector detector) {
         this(TikaConfig.getDefaultConfig());
         setDetector(detector);
     }
 
     /**
-     * Creates an auto-detecting parser instance using the specified set of parser.
+     * Creates an auto-detecting parser instance using the specified set of parser(s)
+     * and the default {@link org.apache.tika.detect.DefaultDetector}.
      * This allows one to create a Tika configuration where only a subset of the
      * available parsers have their 3rd party jars included, as otherwise the
      * use of the default TikaConfig will throw various "ClassNotFound" exceptions.
      * 
-     * @param detector Detector to use
-     * @param parsers
+     * @param parsers the parsers to include.
      */
     public AutoDetectParser(Parser...parsers) {
         this(new DefaultDetector(), parsers);
     }
 
+    /**
+     * Creates an auto-detecting parser instance using the specified set 
+     * and the default {@link org.apache.tika.detect.Detector}(s) and parser(s)
+     * implementations.
+     * This allows one to create a Tika configuration where only a subset of the
+     * available parsers have their 3rd party jars included, as otherwise the
+     * use of the default TikaConfig will throw various "ClassNotFound" exceptions.
+     * 
+     * @param parsers the parsers to include.
+     */
     public AutoDetectParser(Detector detector, Parser...parsers) {
         super(MediaTypeRegistry.getDefaultRegistry(), parsers);
         setDetector(detector);
     }
 
+    /**
+     * Create an auto-detecting parser using an existing 
+     * {@link org.apache.tika.config.TikaConfig} instance.
+     * Subsequently we obtain {@link org.apache.tika.detect.Detector} and
+     * {@link org.apache.tika.parser.Parser} implementations
+     * from the configuration.
+     * @param config the existing Tika configuration.
+     */
     public AutoDetectParser(TikaConfig config) {
         super(config.getMediaTypeRegistry(), config.getParser());
         setDetector(config.getDetector());
@@ -106,6 +132,14 @@ public class AutoDetectParser extends CompositeParser {
             Metadata metadata, ParseContext context)
             throws IOException, SAXException, TikaException {
         TemporaryResources tmp = new TemporaryResources();
+        if(stream != null) {
+          try {
+            Purifier purifier = new WhiteSpacesPurifier();
+            purifier.purify(stream);
+          } catch (IOException e) {
+            throw new RuntimeException("Error while purifying the provided input", e);
+          }
+        }
         try {
             TikaInputStream tis = TikaInputStream.get(stream, tmp);
 

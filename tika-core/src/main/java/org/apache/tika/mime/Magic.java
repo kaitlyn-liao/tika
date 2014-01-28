@@ -24,6 +24,11 @@ package org.apache.tika.mime;
  */
 class Magic implements Clause, Comparable<Magic> {
 
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 5308393371823772332L;
+
     private final MimeType type;
 
     private final int priority;

@@ -81,6 +81,7 @@ public class LanguageProfilerBuilderTest {
         InputStream stream = new FileInputStream(new File(profileName + "."
                 + FILE_EXTENSION));
         try {
+            @SuppressWarnings("resource")
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     stream, encoding));
             String line = reader.readLine();

@@ -38,6 +38,8 @@ import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.TextDetector;
 import org.apache.tika.detect.XmlRootExtractor;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.purifier.Purifier;
+import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 
 /**
  * This class is a MimeType repository. It gathers a set of MimeTypes and
@@ -161,6 +163,9 @@ public final class MimeTypes implements Detector, Serializable {
      * <p>
      * The given byte array is expected to be at least {@link #getMinLength()}
      * long, or shorter only if the document stream itself is shorter.
+     * <p>
+     * If a purifier is present then this is used prior to {@link #getMinLength()}
+     * processing.
      *
      * @param data first few bytes of a document stream
      * @return matching MIME type
@@ -212,6 +217,14 @@ public final class MimeTypes implements Detector, Serializable {
         try {
             TextDetector detector = new TextDetector(getMinLength());
             ByteArrayInputStream stream = new ByteArrayInputStream(data);
+            if(stream != null) {
+              try {
+                Purifier purifier = new WhiteSpacesPurifier();
+                purifier.purify(stream);
+              } catch (IOException e) {
+                throw new RuntimeException("Error while purifying the provided input", e);
+              }
+            }
             return forName(detector.detect(stream, new Metadata()).toString());
         } catch (Exception e) {
             return rootMimeType;
@@ -531,4 +544,5 @@ public final class MimeTypes implements Detector, Serializable {
         }
         return types;
     }
+
 }

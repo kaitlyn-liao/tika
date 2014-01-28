@@ -29,6 +29,11 @@ import org.apache.tika.metadata.Property.ValueType;
  */
 public final class PropertyTypeException extends IllegalArgumentException {
 
+    /**
+     * Generated serial ID
+     */
+  private static final long serialVersionUID = 7164142889292576010L;
+
     public PropertyTypeException(String msg) {
         super(msg);
     }

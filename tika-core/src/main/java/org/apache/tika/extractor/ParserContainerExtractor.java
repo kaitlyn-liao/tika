@@ -29,6 +29,8 @@ import org.apache.tika.io.TemporaryResources;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.purifier.Purifier;
+import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 import org.apache.tika.parser.AbstractParser;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -53,15 +55,32 @@ public class ParserContainerExtractor implements ContainerExtractor {
 
     private final Detector detector;
 
+    /**
+     * Default constructor using 
+     * {@link org.apache.tika.config.TikaConfig#getDefaultConfig()}
+     */
     public ParserContainerExtractor() {
         this(TikaConfig.getDefaultConfig());
     }
 
+    /**
+     * Supplementary constructor which relies upon an existing
+     * {@link org.apache.tika.config.TikaConfig} instance.
+     * @param config the existing 
+     * {@link org.apache.tika.config.TikaConfig} instance
+     */
     public ParserContainerExtractor(TikaConfig config) {
         this(new AutoDetectParser(config),
                 new DefaultDetector(config.getMimeRepository()));
     }
 
+    /**
+     * Supplementary constructor allowing us to specify the following
+     * @param parser the specific {@link org.apache.tika.parser.Parser} 
+     * implementation
+     * @param detector the specific {@link org.apache.tika.detect.Detector}
+     * implementation.
+     */
     public ParserContainerExtractor(Parser parser, Detector detector) {
         this.parser = parser;
         this.detector = detector;
@@ -79,13 +98,26 @@ public class ParserContainerExtractor implements ContainerExtractor {
         ParseContext context = new ParseContext();
         context.set(Parser.class, new RecursiveParser(recurseExtractor, handler));
         try {
-            parser.parse(stream, new DefaultHandler(), new Metadata(), context);
+          if(stream != null) {
+            try {
+              Purifier purifier = new WhiteSpacesPurifier();
+              purifier.purify(stream);
+            } catch (IOException e) {
+              throw new RuntimeException("Error while purifying the provided input", e);
+            }
+          }
+          parser.parse(stream, new DefaultHandler(), new Metadata(), context);
         } catch (SAXException e) {
             throw new TikaException("Unexpected SAX exception", e);
         }
     }
 
     private class RecursiveParser extends AbstractParser {
+
+        /**
+         * Generated serial ID
+         */
+        private static final long serialVersionUID = -6803100507239611231L;
 
         private final ContainerExtractor extractor;
 
@@ -107,8 +139,10 @@ public class ParserContainerExtractor implements ContainerExtractor {
                 Metadata metadata, ParseContext context)
                 throws IOException, SAXException, TikaException {
             TemporaryResources tmp = new TemporaryResources();
+            
             try {
                 TikaInputStream tis = TikaInputStream.get(stream, tmp);
+                
 
                 // Figure out what we have to process
                 String filename = metadata.get(Metadata.RESOURCE_NAME_KEY);

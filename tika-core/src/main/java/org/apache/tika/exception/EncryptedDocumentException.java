@@ -17,6 +17,11 @@
 package org.apache.tika.exception;
 
 public class EncryptedDocumentException extends TikaException {
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -4640940743548761225L;
+
     public EncryptedDocumentException() {
         super("Unable to process: document is encrypted");
     }

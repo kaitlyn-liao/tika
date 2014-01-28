@@ -26,7 +26,6 @@ import java.net.URL;
 
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.metadata.Metadata;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,6 +73,7 @@ public class MimeDetectionTest {
         testFile("image/cgm", "plotutils-bin-cgm-v3.cgm");
         // test HTML detection of malformed file, previously identified as image/cgm (TIKA-1170)
         testFile("text/html", "test-malformed-header.html.bin");
+        //TODO add tests for new MimeTypes in TIKA-1208
     }
 
     @Test

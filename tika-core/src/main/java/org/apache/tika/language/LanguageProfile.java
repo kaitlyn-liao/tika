@@ -62,6 +62,7 @@ public class LanguageProfile {
     public LanguageProfile(String content, int length) {
         this(length);
 
+        @SuppressWarnings("resource")
         ProfilingWriter writer = new ProfilingWriter(this);
         char[] ch = content.toCharArray();
         writer.write(ch, 0, ch.length);

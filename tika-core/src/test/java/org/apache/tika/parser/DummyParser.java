@@ -32,6 +32,10 @@ import org.xml.sax.SAXException;
  * A Dummy Parser for use with unit tests.
  */
 public class DummyParser extends AbstractParser {
+   /**
+    * Generated serial ID
+    */
+   private static final long serialVersionUID = -4197644127672051333L;
    private Set<MediaType> types;
    private Map<String,String> metadata;
    private String xmlText;

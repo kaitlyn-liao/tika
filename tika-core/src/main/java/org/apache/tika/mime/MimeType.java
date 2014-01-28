@@ -19,7 +19,6 @@ package org.apache.tika.mime;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
 public final class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
-     * Serial version UID.
+     * Generated serial ID
      */
     private static final long serialVersionUID = 4357830439860729201L;
 
@@ -112,6 +111,16 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
     private List<String> extensions = null;
 
     /**
+     * The normalized media subtype name.
+     */
+    private String subtype  = null;
+    
+    /**
+     * The quality value for the media type.
+     */
+    private double q = 0;
+
+    /**
      * Creates a media type with the give name and containing media type
      * registry. The name is expected to be valid and normalized to lower
      * case. This constructor should only be called by
@@ -125,6 +134,28 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
             throw new IllegalArgumentException("Media type name is missing");
         }
         this.type = type;
+    }
+    
+    /**
+     * Creates a media type with the give name and containing media type
+     * registry. The name is expected to be valid and normalized to lower
+     * case. This constructor should only be called by
+     * {@link MimeTypes#forName(String)} to keep the media type registry
+     * up to date. In addition parameters for media subtype and quality
+     * are provided.
+     * An example of a mime type containg these parameters is: 
+     * <code>application/rdf+xml;q=0.9</code> 
+     * @param type normalized media type name
+     * @param subtype normalized media subtype name
+     * @param q quality value for the media type
+     */
+    MimeType(MediaType type, String subtype, double q) {
+      if (type == null) {
+        throw new IllegalArgumentException("Media type name is missing");
+      }
+      this.type = type;
+      this.subtype = subtype;
+      this.q = q;
     }
 
     /**
@@ -459,6 +490,30 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
         if (!extensions.contains(extension)) {
             extensions.add(extension);
         }
+    }
+
+    public String getMajorType() {
+      return (type.toString() == null ? "*" : type.toString());
+    }
+    
+    public String getSubtype() {
+      return (subtype == null ? "*" : subtype);
+  }
+
+    public String getFullType() {
+      return getMajorType() + "/" + getSubtype();
+    }
+
+    public double getQuality() {
+      return q;
+    }
+
+    public boolean isAnyMajorType() {
+      return type == null;
+    }
+
+    public boolean isAnySubtype() {
+      return subtype == null;
     }
 
 }

@@ -23,6 +23,11 @@ import org.apache.tika.exception.TikaException;
  */
 public class MimeTypeException extends TikaException {
 
+  /**
+   * Default serial ID
+   */
+  private static final long serialVersionUID = -1122922305859821242L;
+
     /**
      * Constructs a MimeTypeException with the specified detail message.
      * 

@@ -20,6 +20,10 @@ import java.util.Arrays;
 
 class AndClause implements Clause {
 
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -3572009507680757629L;
     private final Clause[] clauses;
 
     AndClause(Clause... clauses) {

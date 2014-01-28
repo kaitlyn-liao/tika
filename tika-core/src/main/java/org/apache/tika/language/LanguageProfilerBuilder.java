@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.tika.exception.TikaException;
 
 /**
@@ -692,6 +693,7 @@ public class LanguageProfilerBuilder {
             this(16);
         }
 
+        @SuppressWarnings("unused")
         QuickStringBuffer(char[] value) {
             this.value = value;
             count = value.length;
@@ -701,6 +703,7 @@ public class LanguageProfilerBuilder {
             value = new char[length];
         }
 
+        @SuppressWarnings("unused")
         QuickStringBuffer(String str) {
             this(str.length() + 16);
             append(str);

@@ -22,6 +22,8 @@ import java.util.Arrays;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.purifier.Purifier;
+import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 
 /**
  * Content type detection of plain text documents. This detector looks at the
@@ -101,7 +103,9 @@ public class TextDetector implements Detector {
     
     /**
      * Looks at the beginning of the document input stream to determine
-     * whether the document is text or not.
+     * whether the document is text or not. Uses the default 
+     * {@link org.apache.tika.mime.purifier.WhiteSpacesPurifier()}
+     * on the InputStream.
      *
      * @param input document input stream, or <code>null</code>
      * @param metadata ignored
@@ -113,7 +117,17 @@ public class TextDetector implements Detector {
         if (input == null) {
             return MediaType.OCTET_STREAM;
         }
-
+        
+        //Purify the InputStream with the 'default'
+        //WhiteSpacePurifier. In the future we could make
+        //this configurable.
+        Purifier purifier = new WhiteSpacesPurifier();
+        try {
+          purifier.purify(input);
+        } catch (IOException e) {
+          throw new RuntimeException("Error while purifying the provided InputStream", e);
+        }
+        
         input.mark(bytesToTest);
         try {
             TextStatistics stats = new TextStatistics();
