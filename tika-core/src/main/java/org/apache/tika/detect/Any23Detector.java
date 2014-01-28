@@ -3,7 +3,6 @@
  */
 package org.apache.tika.detect;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
+import org.apache.tika.config.TikaConfig;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.MimeType;
@@ -36,11 +36,16 @@ public class Any23Detector implements Detector {
   private static final long serialVersionUID = 8673328556174564097L;
 
   private Purifier purifier;
-  
+
   private Tika tika;
-  
+
   private static MimeTypes types;
-  
+
+  private static TikaConfig config = null;
+
+  public static final String RESOURCE_NAME = "org/apache/tika/mime/tika-mimetypes.xml";
+
+
   //TODO add once CSV module has been ported from Any23
   //public static final String CSV_MIMETYPE = "text/csv";
 
@@ -59,6 +64,22 @@ public class Any23Detector implements Detector {
    */
   public Any23Detector(Purifier purifier) {
     this.purifier = purifier;
+    InputStream is = getResourceAsStream();
+    if (config == null) {
+      try {
+        config = new TikaConfig(is);
+      } catch (Exception e) {
+        throw new RuntimeException("Error while loading Tika configuration.", e);
+      }
+    }
+
+    if (types == null) {
+      types = config.getMimeRepository();
+    }
+
+    if(tika == null) {
+      tika = new Tika(config);
+    }
   }
 
   /**
@@ -79,31 +100,40 @@ public class Any23Detector implements Detector {
 
     if(input != null) {
       try {
-        if(!input.markSupported()) {
-            input = new BufferedInputStream(input);
-        }
-        input.mark(Integer.MAX_VALUE);
+        //if(!input.markSupported()) {
+        //    input = new BufferedInputStream(input);
+        //}
+        //input.mark(Integer.MAX_VALUE);
         this.purifier.purify(input);
       } catch (IOException e) {
         throw new RuntimeException("Error while purifying the provided input", e);
-      } finally {
-          input.reset();
+        //} finally {
+        //    input.reset();
       }
     }
     if (metadata == null) {
       metadata = new Metadata();
     }
-    //MediaType mime = MediaType.parse(IOUtils.toString(input));
-    //if (mime.getType() != null) {
-    //  metadata.set(Metadata.CONTENT_TYPE, mime.getType());
-    // }
-    
-    //TODO determine whether we can do resourceName-based mime detection
-    //if (metadata. != null)
-    //    metadata.set(Metadata.RESOURCE_NAME_KEY, fileName);
+    MediaType mime = MediaType.parse(metadata.get(Metadata.CONTENT_TYPE));;
+    //try {
+    //  mime = MediaType.parse(metadata.get(Metadata.CONTENT_TYPE));
+      if (mime != null) {
+        metadata.set(Metadata.CONTENT_TYPE, mime.getBaseType().toString());
+      }
+    //} catch (Exception e) {
+    //  e.printStackTrace();
+    //}
+    String resourceName;
+    try {
+      resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
+      if (input != null) {
+        metadata.set(Metadata.RESOURCE_NAME_KEY, resourceName);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     String type;
-    tika = new Tika();
     try {
       final String mt = guessMimeTypeByInputAndMeta(input, metadata);
       if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
@@ -116,8 +146,8 @@ public class Any23Detector implements Detector {
         } else if( checkTurtleFormat(input) ) {
           type = RDFFormat.TURTLE.getDefaultMIMEType();
           //TODO add once CSV module has been ported from Any23
-        //} else if( checkCSVFormat(input) ) {
-        //  type = CSV_MIMETYPE;
+          //} else if( checkCSVFormat(input) ) {
+          //  type = CSV_MIMETYPE;
         }
         else {
           type = MimeTypes.OCTET_STREAM; 
@@ -143,72 +173,72 @@ public class Any23Detector implements Detector {
    * @throws IOException if the document stream could not be read
    */
   private String guessMimeTypeByInputAndMeta(InputStream stream, final Metadata metadata)
-  throws IOException {
-      if (stream != null) {
-          final String type = tika.detect(stream);
-          if ( type != null && ! isGenericMIMEType(type) ) {
-              return type;
-          }
+      throws IOException {
+    if (stream != null) {
+      final String type = tika.detect(stream, metadata);
+      if ( type != null && ! isGenericMIMEType(type) ) {
+        return type;
       }
+    }
 
-      // Attempts to determine the MIMEType based on Content-Type 
-      // hint if available.
-      String contentType = null;
-      if (metadata.get(Metadata.CONTENT_TYPE) != null) {
-        contentType = metadata.get(Metadata.CONTENT_TYPE);
-      }
-      String candidateMIMEType = null;
-      if (contentType != null) {
-          try {
-              MimeType type = types.forName(contentType);
-              if (type != null) {
-                  if( ! isPlainMIMEType(type.getName()) ) {
-                      return type.getName();
-                  } else {
-                      candidateMIMEType = type.getName();
-                  }
-              }
-          }
-          catch (MimeTypeException mte) {
-              // Malformed ocntent-type value, ignore.
-          }
-      }
-
-      // Attempts to determine the MIMEType based on resource name 
-      // hint if available.
-      String resourceName = null;
-      if (metadata.get(Metadata.RESOURCE_NAME_KEY) != null) {
-        resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
-      }
-      if (resourceName != null) {
-        MediaType type = MediaType.parse(resourceName);
+    // Attempts to determine the MIMEType based on Content-Type 
+    // hint if available.
+    String contentType = null;
+    if (metadata.get(Metadata.CONTENT_TYPE) != null) {
+      contentType = metadata.get(Metadata.CONTENT_TYPE);
+    }
+    String candidateMIMEType = null;
+    if (contentType != null) {
+      try {
+        MimeType type = types.forName(contentType);
         if (type != null) {
-            return type.getBaseType().toString();
+          if( ! isPlainMIMEType(type.getName()) ) {
+            return type.getName();
+          } else {
+            candidateMIMEType = type.getName();
+          }
         }
       }
-
-      // Finally, use the default type if no matches found
-      if(candidateMIMEType != null) {
-          return candidateMIMEType;
-      } else {
-          return MimeTypes.OCTET_STREAM;
+      catch (MimeTypeException mte) {
+        // Malformed ocntent-type value, ignore.
       }
+    }
+
+    // Attempts to determine the MIMEType based on resource name 
+    // hint if available.
+    String resourceName = null;
+    if (metadata.get(Metadata.RESOURCE_NAME_KEY) != null) {
+      resourceName = metadata.get(Metadata.RESOURCE_NAME_KEY);
+    }
+    if (resourceName != null) {
+      MediaType type = MediaType.parse(resourceName);
+      if (type != null) {
+        return type.getBaseType().toString();
+      }
+    }
+
+    // Finally, use the default type if no matches found
+    if(candidateMIMEType != null) {
+      return candidateMIMEType;
+    } else {
+      return MimeTypes.OCTET_STREAM;
+    }
   }
 
   private boolean isGenericMIMEType(String type) {
     return
         isPlainMIMEType(type)
-            ||
+        ||
         type.equals(MimeTypes.XML);
   }
 
   private boolean isPlainMIMEType(String type) {
     return
         type.equals(MimeTypes.OCTET_STREAM)
-            ||
+        ||
         type.equals(MimeTypes.PLAIN_TEXT);
   }
-  
+
   /**
    * Estimates the <code>MIME</code> type of the content of input file.
    * The <i>input</i> stream must be resettable.
@@ -222,48 +252,48 @@ public class Any23Detector implements Detector {
    */
   @SuppressWarnings("deprecation")
   public MediaType guessMIMEType(
-          String fileName,
-          InputStream input,
-          MimeType mimeTypeFromMetadata
-  ) {
-      if(input != null) {
-          try {
-              this.purifier.purify(input);
-          } catch (IOException e) {
-              throw new RuntimeException("Error while purifying the provided input", e);
-          }
-      }
-
-      final Metadata meta = new Metadata();
-      if (mimeTypeFromMetadata != null)
-          meta.set(Metadata.CONTENT_TYPE, mimeTypeFromMetadata.getFullType());
-
-      if (fileName != null)
-          meta.set(Metadata.RESOURCE_NAME_KEY, fileName);
-
-      String type;
+      String fileName,
+      InputStream input,
+      MimeType mimeTypeFromMetadata
+      ) {
+    if(input != null) {
       try {
-          final String mt = guessMimeTypeByInputAndMeta(input, meta);
-          if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
-              type = mt;
-          } else {
-              if( checkN3Format(input) ) {
-                  type = RDFFormat.N3.getDefaultMIMEType();
-              } else if( checkNQuadsFormat(input) ) {
-                  type = RDFFormat.NQUADS.getDefaultMIMEType();
-              } else if( checkTurtleFormat(input) ) {
-                  type = RDFFormat.TURTLE.getDefaultMIMEType();
-              //} else if( checkCSVFormat(input) ) {
-              //    type = CSV_MIMETYPE;
-              }
-              else {
-                  type = MimeTypes.OCTET_STREAM; 
-              }
-          }
-      } catch (IOException ioe) {
-          throw new RuntimeException("Error while retrieving mime type.", ioe);
+        this.purifier.purify(input);
+      } catch (IOException e) {
+        throw new RuntimeException("Error while purifying the provided input", e);
       }
-      return MediaType.parse(type);
+    }
+
+    final Metadata meta = new Metadata();
+    if (mimeTypeFromMetadata != null)
+      meta.set(Metadata.CONTENT_TYPE, mimeTypeFromMetadata.getFullType());
+
+    if (fileName != null)
+      meta.set(Metadata.RESOURCE_NAME_KEY, fileName);
+
+    String type;
+    try {
+      final String mt = guessMimeTypeByInputAndMeta(input, meta);
+      if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
+        type = mt;
+      } else {
+        if( checkN3Format(input) ) {
+          type = RDFFormat.N3.getDefaultMIMEType();
+        } else if( checkNQuadsFormat(input) ) {
+          type = RDFFormat.NQUADS.getDefaultMIMEType();
+        } else if( checkTurtleFormat(input) ) {
+          type = RDFFormat.TURTLE.getDefaultMIMEType();
+          //} else if( checkCSVFormat(input) ) {
+            //    type = CSV_MIMETYPE;
+        }
+        else {
+          type = MimeTypes.OCTET_STREAM; 
+        }
+      }
+    } catch (IOException ioe) {
+      throw new RuntimeException("Error while retrieving mime type.", ioe);
+    }
+    return MediaType.parse(type);
   }
 
   /**
@@ -402,6 +432,23 @@ public class Any23Detector implements Detector {
       br.reset();
     }
     return sb.toString();
+  }
+
+  /**
+   * Loads the <code>Tika</code> configuration file.
+   *
+   * @return the input stream containing the configuration.
+   */
+  private InputStream getResourceAsStream() {
+    InputStream result;
+    result = Any23Detector.class.getResourceAsStream(RESOURCE_NAME);
+    if (result == null) {
+      result = Any23Detector.class.getClassLoader().getResourceAsStream(RESOURCE_NAME);
+      if (result == null) {
+        result = ClassLoader.getSystemResourceAsStream(RESOURCE_NAME);
+      }
+    }
+    return result;
   }
 
 }

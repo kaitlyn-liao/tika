@@ -31,6 +31,8 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
      * Generated serial ID
      */
     private static final long serialVersionUID = 4357830439860729201L;
+    
+    private final static String MSG = "Cannot parse MIME type (expected type/subtype[;q=x.y] format): ";
 
     /**
      * Checks that the given string is a valid Internet media type name
@@ -156,6 +158,59 @@ public final class MimeType implements Comparable<MimeType>, Serializable {
       this.type = type;
       this.subtype = subtype;
       this.q = q;
+    }
+    
+    /**
+     * Parses the given MIME type string returning an instance of
+     * {@link MIMEType}.
+     * The expected format for <code>mimeType</code> is
+     * <code>type/subtype[;q=x.y]</code> .
+     * An example of valid mime type is: <code>application/rdf+xml;q=0.9</code> 
+     *
+     * @param mimeType
+     * @return the mime type instance.
+     * @throws IllegalArgumentException if the <code>mimeType</code> is not well formatted.
+     */
+    public static MimeType parse(String mimeType) {
+        if (mimeType == null) return null;
+        int i = mimeType.indexOf(';');
+        double q = 1.0;
+        if (i > -1) {
+            String[] params = mimeType.substring(i + 1).split(";");
+            for (String param : params) {
+                int i2 = param.indexOf('=');
+                if (i2 == -1) continue;
+                if (!"q".equals(param.substring(0, i2).trim().toLowerCase())) continue;
+                String value = param.substring(i2 + 1);
+                try {
+                    q = Double.parseDouble(value);
+                } catch (NumberFormatException ex) {
+                    continue;
+                }
+                if (q <= 0.0 || q >= 1.0) {
+                    q = 1.0;
+                }
+            }
+        } else {
+            i = mimeType.length();
+        }
+        String type = mimeType.substring(0, i);
+        int i2 = type.indexOf('/');
+        if (i2 == -1) {
+            throw new IllegalArgumentException(MSG + mimeType);
+        }
+        String p1 = type.substring(0, i2).trim().toLowerCase();
+        String p2 = type.substring(i2 + 1).trim().toLowerCase();
+        if ("*".equals(p1)) {
+            if (!"*".equals(p2)) {
+                throw new IllegalArgumentException(MSG + mimeType);
+            }
+            return new MimeType(null, null, q);
+        }
+        if ("*".equals(p2)) {
+            return new MimeType(MediaType.parse(p1), null, q);
+        }
+        return new MimeType(MediaType.parse(p1), p2, q);
     }
 
     /**
