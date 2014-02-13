@@ -18,6 +18,7 @@ package org.apache.tika.parser.microsoft;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.InputStream;
 import java.util.Locale;
@@ -349,5 +350,31 @@ public class WordParserTest extends TikaTest {
     @Test
     public void testTabularSymbol() throws Exception {
         assertContains("one two", getXML("testWORD_tabular_symbol.doc").xml.replaceAll("\\s+", " "));
+    }
+    
+    /**
+     * TIKA-1229 Hyperlinks in Headers should be output as such,
+     *  not plain text with control characters
+     */
+    @Test
+    public void testHeaderHyperlinks() throws Exception {
+        XMLResult result = getXML("testWORD_header_hyperlink.doc");
+        String xml = result.xml;
+        Metadata metadata = result.metadata;
+
+        assertEquals(
+                     "application/msword",
+                     metadata.get(Metadata.CONTENT_TYPE));
+        assertEquals("Lutz Theurer", metadata.get(TikaCoreProperties.CREATOR));
+        assertContains("example.com", xml);
+
+        // Check we don't have the special text HYPERLINK
+        assertFalse(xml.contains("HYPERLINK"));
+        
+        // Check we do have the link
+        assertContains("<a href=\"http://tw-systemhaus.de\">http:", xml);
+        
+        // Check we do have the email
+        assertContains("<a href=\"mailto:ab@example.com\">ab@", xml);
     }
 }
