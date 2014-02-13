@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
@@ -206,7 +205,7 @@ public class Any23DetectorTest {
 
   @Test
   public void testDetectWSDLByContent() throws Exception {
-    detectMIMEtypeByContent("application/x-wsdl", manifestWsdl());
+    detectMIMEtypeByContent("application/wsdl+xml", manifestWsdl());
   }
 
   private List<String> manifestWsdl() {
@@ -360,7 +359,7 @@ public class Any23DetectorTest {
 
   @Test
   public void testWSDLByContentAndName() throws Exception {
-    detectMIMETypeByContentAndName("application/x-wsdl", manifestWsdl());
+    detectMIMETypeByContentAndName("application/wsdl+xml", manifestWsdl());
   }
 
   @Test

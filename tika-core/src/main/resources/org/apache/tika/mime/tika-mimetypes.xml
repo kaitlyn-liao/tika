@@ -2351,6 +2351,13 @@
   </mime-type>
   <mime-type type="application/wita"/>
   <mime-type type="application/wordperfect5.1"/>
+  <mime-type type="application/wsdl+xml">
+    <alias type="application/x-wsdl" />
+    <sub-class-of type="application/xml"/>
+    <root-XML localName="definitions"/>
+    <root-XML namespaceURI="http://schemas.xmlsoap.org/wsdl/" localName="definitions"/>
+    <glob pattern="*.wsdl"/>
+  </mime-type>
   <mime-type type="application/wspolicy+xml">
     <glob pattern="*.wspolicy"/>
   </mime-type>
@@ -3447,14 +3454,6 @@
     <glob pattern="*.xhvml"/>
     <glob pattern="*.xvml"/>
     <glob pattern="*.xvm"/>
-  </mime-type>
-  
-  <mime-type type="application/x-wsdl">
-    <alias type="application/wsdl+xml" />
-    <sub-class-of type="application/xml"/>
-    <root-XML localName="definitions"/>
-    <root-XML namespaceURI="http://schemas.xmlsoap.org/wsdl/" localName="definitions"/>
-    <glob pattern="*.wsdl"/>
   </mime-type>
 
   <mime-type type="application/zip">
