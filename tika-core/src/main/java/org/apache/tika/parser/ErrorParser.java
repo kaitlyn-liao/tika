@@ -33,6 +33,10 @@ import org.xml.sax.ContentHandler;
 public class ErrorParser extends AbstractParser {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 7727423956957641824L;
+    /**
      * Singleton instance of this class.
      */
     public static final ErrorParser INSTANCE = new ErrorParser();

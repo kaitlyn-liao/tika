@@ -41,16 +41,31 @@ public class CompositeParserTest {
     @Test
     public void testFindDuplicateParsers() {
         Parser a = new EmptyParser() {
+            /**
+             * Generated serial ID
+             */
+            private static final long serialVersionUID = -8475080505932285169L;
+
             public Set<MediaType> getSupportedTypes(ParseContext context) {
                 return Collections.singleton(MediaType.TEXT_PLAIN);
             }
         };
         Parser b = new EmptyParser() {
+            /**
+             * Generated serial ID
+             */
+             private static final long serialVersionUID = -4846333006512101154L;
+
             public Set<MediaType> getSupportedTypes(ParseContext context) {
                 return Collections.singleton(MediaType.TEXT_PLAIN);
             }
         };
         Parser c = new EmptyParser() {
+            /**
+             * Generated serial ID
+             */
+            private static final long serialVersionUID = -8312856259921893617L;
+
             public Set<MediaType> getSupportedTypes(ParseContext context) {
                 return Collections.singleton(MediaType.OCTET_STREAM);
             }

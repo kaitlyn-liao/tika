@@ -26,6 +26,10 @@ import org.xml.sax.SAXException;
 public class TaggedSAXException extends SAXException {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -2383105081515353584L;
+    /**
      * The object reference used to tag the exception.
      */
     private final Object tag;

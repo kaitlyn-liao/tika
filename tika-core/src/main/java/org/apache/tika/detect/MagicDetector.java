@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.purifier.Purifier;
+import org.apache.tika.mime.purifier.WhiteSpacesPurifier;
 
 /**
  * Content type detection based on magic bytes, i.e. type-specific patterns
@@ -39,6 +41,11 @@ import org.apache.tika.mime.MediaType;
  * @since Apache Tika 0.3
  */
 public class MagicDetector implements Detector {
+
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -8869394154590907300L;
 
     private static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
 
@@ -354,6 +361,16 @@ public class MagicDetector implements Detector {
             return MediaType.OCTET_STREAM;
         }
 
+        //Purify the InputStream with the 'default'
+        //WhiteSpacePurifier. In the future we could make
+        //this configurable.
+        Purifier purifier = new WhiteSpacesPurifier();
+        try {
+          purifier.purify(input);
+        } catch (IOException e) {
+          throw new RuntimeException("Error while purifying the provided InputStream", e);
+        }
+        
         input.mark(offsetRangeEnd + length);
         try {
             int offset = 0;

@@ -26,6 +26,10 @@ import java.io.IOException;
 public class TaggedIOException extends IOExceptionWithCause {
 
     /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 7828785471783649782L;
+    /**
      * The object reference used to tag the exception.
      */
     private final Object tag;

@@ -27,6 +27,11 @@ import org.apache.tika.metadata.Metadata;
  */
 class MagicMatch implements Clause {
 
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = 4693039941295960620L;
+
     private final MediaType mediaType;
 
     private final String type;

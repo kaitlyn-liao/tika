@@ -19,7 +19,6 @@ package org.apache.tika.mime;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +28,7 @@ import java.util.List;
 public final class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
-     * Serial version UID.
+     * Generated serial ID
      */
     private static final long serialVersionUID = 4357830439860729201L;
 
