@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.metadata.Metadata;
@@ -19,9 +18,11 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.mime.purifier.Purifier;
+import org.openrdf.rio.ParserConfig;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.BasicParserSettings;
 
 /**
  * Implementation of {@link org.apache.tika.detect.Detector} 
@@ -242,7 +243,6 @@ public class Any23Detector implements Detector {
    * @return the supposed mime type or <code>null</code> if nothing appropriate found.
    * @throws IllegalArgumentException if <i>input</i> is not <code>null</code> and is not resettable.
    */
-  @SuppressWarnings("deprecation")
   public MediaType guessMIMEType(
       String fileName,
       InputStream input,
@@ -340,6 +340,8 @@ public class Any23Detector implements Detector {
   public static boolean checkTurtleFormat(InputStream is) throws IOException {
     String sample = extractDataSample(is, '.');
     RDFParser turtleParser = Rio.createParser(RDFFormat.TURTLE);
+    //turtleParser.getParserConfig().set(BasicParserSettings.VERIFY_DATATYPE_VALUES, 
+    //    ParserConfig.addNonFatalError(RioSetting));
     turtleParser.setDatatypeHandling(RDFParser.DatatypeHandling.VERIFY);
     turtleParser.setStopAtFirstError(true);
     turtleParser.setVerifyData(true);

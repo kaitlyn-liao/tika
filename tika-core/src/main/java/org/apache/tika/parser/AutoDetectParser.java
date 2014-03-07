@@ -127,6 +127,7 @@ public class AutoDetectParser extends CompositeParser {
         this.detector = detector;
     }
 
+    @SuppressWarnings("resource")
     public void parse(
             InputStream stream, ContentHandler handler,
             Metadata metadata, ParseContext context)
