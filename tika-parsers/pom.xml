@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.5</version>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -195,6 +195,11 @@
           <artifactId>servlet-api</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+    <groupId>com.pff</groupId>
+      <artifactId>java-libpst</artifactId>
+      <version>0.7</version>
     </dependency>
 
     <!-- Test dependencies -->
