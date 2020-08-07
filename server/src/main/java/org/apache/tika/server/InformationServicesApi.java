@@ -1,6 +1,5 @@
-package org.openapitools.api;
+package org.apache.tika.server;
 
-import org.openapitools.model.DefaultDetector;
 import org.openapitools.model.ParsersORParsersDetails;
 
 import java.io.InputStream;

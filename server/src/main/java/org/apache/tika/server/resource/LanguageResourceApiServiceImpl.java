@@ -1,4 +1,4 @@
-package org.openapitools.api.impl;
+package org.apache.tika.server.resource;
 
 import org.openapitools.api.*;
 

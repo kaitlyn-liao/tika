@@ -1,6 +1,7 @@
-package org.openapitools.api.impl;
+package org.apache.tika.server.resource;
 
 import org.openapitools.api.*;
+import java.util.Map;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,26 +22,26 @@ import io.swagger.annotations.Api;
  * <p>The Tika server implements [JAX-RS](http://en.wikipedia.org/wiki/JAX-RS) (Java API for RESTful Web Services) to provide web services according to the Representational State Transfer (REST) architectural style. This facilitates a wide varity oif operations and flexibility with regards to both client and server implementations. The officially supported Tika server implementation is packaged using the OpenAPI [jaxrs-cxf generator](https://openapi-generator.tech/docs/generators/jaxrs-cxf]. This work was tracked through [TIKA-3082](https://issues.apache.org/jira/browse/TIKA-3082). <b>N.B.</b> the OpenAPI version always tracks the underlying Tika version to remove uncertainty about which version of Tika is running within the server.
  *
  */
-public class TikaResourceApiServiceImpl implements TikaResourceApi {
+public class MetadataResourceApiServiceImpl implements MetadataResourceApi {
     /**
-     * GET returns a greeting stating the server is up.
+     * PUT a document to the metadata extraction resource.
      *
-     * HTTP GET returns a greeting stating the server is up. Followed by a PUT request to extract text.
+     * PUT a document to the metadata extraction resource.
      *
      */
-    public String getTika() {
+    public Map<String, String> putDocumentMeta() {
         // TODO: Implement...
         
         return null;
     }
     
     /**
-     * GET returns a greeting stating the server is up.
+     * PUT a document to the metadata extraction resource and get a specific metadata key&#39;s value.
      *
-     * HTTP PUTs a document to the /tika service and you get back the extracted text.
+     * PUT a document to the metadata extraction resource and get a specific metadata key&#39;s value.
      *
      */
-    public String putTika() {
+    public Map<String, String> putDocumentMetaGetKeyValue(String metadataKey) {
         // TODO: Implement...
         
         return null;

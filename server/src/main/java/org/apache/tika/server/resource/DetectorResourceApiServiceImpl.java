@@ -1,4 +1,4 @@
-package org.openapitools.api.impl;
+package org.apache.tika.server.resource;
 
 import org.openapitools.api.*;
 
@@ -21,14 +21,14 @@ import io.swagger.annotations.Api;
  * <p>The Tika server implements [JAX-RS](http://en.wikipedia.org/wiki/JAX-RS) (Java API for RESTful Web Services) to provide web services according to the Representational State Transfer (REST) architectural style. This facilitates a wide varity oif operations and flexibility with regards to both client and server implementations. The officially supported Tika server implementation is packaged using the OpenAPI [jaxrs-cxf generator](https://openapi-generator.tech/docs/generators/jaxrs-cxf]. This work was tracked through [TIKA-3082](https://issues.apache.org/jira/browse/TIKA-3082). <b>N.B.</b> the OpenAPI version always tracks the underlying Tika version to remove uncertainty about which version of Tika is running within the server.
  *
  */
-public class RecursiveMetadataAndContentApiServiceImpl implements RecursiveMetadataAndContentApi {
+public class DetectorResourceApiServiceImpl implements DetectorResourceApi {
     /**
-     * Returns a JSONified list of Metadata objects for the container document and all embedded documents.
+     * PUT a document and use the default detector to identify the MIME/media type.
      *
-     * Returns an InputStream that can be deserialized as a list of {@link Metadata} objects. The first in the list represents the main document, and the rest represent metadata for the embedded objects. This works recursively through all descendants of the main document, not just the immediate children. The extracted text content is stored with the key {@link RecursiveParserWrapper#TIKA_CONTENT}.
+     * PUT a document and use the default detector to identify the MIME/media type. The caveat here is that providing a hint for the filename can increase the quality of detection. Default return is a string of the Media type name.
      *
      */
-    public String putRmeta() {
+    public String putStream() {
         // TODO: Implement...
         
         return null;
