@@ -30,6 +30,10 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.config.Field;
+import org.apache.tika.detect.XmlRootExtractor;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.extractor.EmbeddedDocumentExtractor;
 import org.apache.tika.extractor.EmbeddedDocumentUtil;
@@ -42,7 +46,9 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.EmbeddedContentHandler;
 import org.apache.tika.sax.EndDocumentShieldingContentHandler;
+import org.apache.tika.sax.OfflineContentHandler;
 import org.apache.tika.sax.XHTMLContentHandler;
+import org.apache.tika.utils.XMLReaderUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -119,6 +125,8 @@ public class OpenDocumentParser extends AbstractParser {
         return SUPPORTED_TYPES;
     }
 
+    private boolean extractMacros = false;
+
     public void parse(
             InputStream stream, ContentHandler baseHandler,
             Metadata metadata, ParseContext context)
@@ -144,7 +152,7 @@ public class OpenDocumentParser extends AbstractParser {
 
         // Prepare to handle the content
         XHTMLContentHandler xhtml = new XHTMLContentHandler(baseHandler, metadata);
-
+        xhtml.startDocument();
         // As we don't know which of the metadata or the content
         //  we'll hit first, catch the endDocument call initially
         EndDocumentShieldingContentHandler handler =
@@ -170,6 +178,11 @@ public class OpenDocumentParser extends AbstractParser {
         if (handler.getEndDocumentWasCalled()) {
             handler.reallyEndDocument();
         }
+    }
+
+    @Field
+    public void setExtractMacros(boolean extractMacros) {
+        this.extractMacros = extractMacros;
     }
 
     private void handleZipStream(ZipInputStream zipStream, Metadata metadata, ParseContext context, EndDocumentShieldingContentHandler handler) throws IOException, TikaException, SAXException {
@@ -204,10 +217,9 @@ public class OpenDocumentParser extends AbstractParser {
         }
     }
     private void handleZipEntry(ZipEntry entry, InputStream zip, Metadata metadata,
-                                ParseContext context, EndDocumentShieldingContentHandler handler)
+                                ParseContext context, ContentHandler handler)
             throws IOException, SAXException, TikaException {
         if (entry == null) return;
-
         if (entry.getName().equals("mimetype")) {
             String type = IOUtils.toString(zip, UTF_8);
             metadata.set(Metadata.CONTENT_TYPE, type);
@@ -232,24 +244,66 @@ public class OpenDocumentParser extends AbstractParser {
             //scrape everything under Thumbnails/ and Pictures/
             if (embeddedName.contains("Thumbnails/") ||
                     embeddedName.contains("Pictures/")) {
+
                 EmbeddedDocumentExtractor embeddedDocumentExtractor =
                         EmbeddedDocumentUtil.getEmbeddedDocumentExtractor(context);
                 Metadata embeddedMetadata = new Metadata();
                 embeddedMetadata.set(TikaCoreProperties.ORIGINAL_RESOURCE_NAME, entry.getName());
-                /* if (embeddedName.startsWith("Thumbnails/")) {
+                if (embeddedName.startsWith("Thumbnails/")) {
                     embeddedMetadata.set(TikaCoreProperties.EMBEDDED_RESOURCE_TYPE,
-                            TikaCoreProperties.EmbeddedResourceType.THUMBNAIL);
-                }*/
+                            TikaCoreProperties.EmbeddedResourceType.THUMBNAIL.toString());
+                }
                 if (embeddedName.contains("Pictures/")) {
                     embeddedMetadata.set(TikaCoreProperties.EMBEDDED_RESOURCE_TYPE,
                             TikaCoreProperties.EmbeddedResourceType.INLINE.toString());
                 }
+
                 if (embeddedDocumentExtractor.shouldParseEmbedded(embeddedMetadata)) {
                     embeddedDocumentExtractor.parseEmbedded(zip,
                             new EmbeddedContentHandler(handler), embeddedMetadata, false);
                 }
+            } else if (extractMacros && embeddedName.contains("Basic/")) {
+                //process all files under Basic/; let maybeHandleMacro figure
+                //out if it is a macro or not
+                maybeHandleMacro(zip, embeddedName, handler, context);
             }
 
         }
     }
+
+    private void maybeHandleMacro(InputStream is, String embeddedName,
+                                  ContentHandler handler, ParseContext context)
+            throws TikaException, IOException, SAXException {
+        //should probably run XMLRootExtractor on the inputstream
+        //or read the macro manifest for the names of the macros
+        //rather than relying on the script file name
+        if (ignoreScriptFile(embeddedName)) {
+            return;
+        }
+        Metadata embeddedMetadata = new Metadata();
+        embeddedMetadata.set(TikaCoreProperties.EMBEDDED_RESOURCE_TYPE,
+                TikaCoreProperties.EmbeddedResourceType.MACRO.toString());
+        handler = new OpenDocumentMacroHandler(handler, context);
+        XMLReaderUtils.parseSAX(
+                new CloseShieldInputStream(is),
+                new OfflineContentHandler(new EmbeddedContentHandler(
+                        handler)), context);
+    }
+
+
+    private boolean ignoreScriptFile(String embeddedName) {
+        if (embeddedName.contains("Basic/")) {
+            if (embeddedName.contains("script-lb.xml")) {
+                return true;
+            } else if (embeddedName.contains("script-lc.xml")) {
+                return true;
+            }
+        } else {
+            //shouldn't ever get here, but if it isn't under Basic/, ignore it
+            return true;
+        }
+        return false;
+    }
+
+
 }
