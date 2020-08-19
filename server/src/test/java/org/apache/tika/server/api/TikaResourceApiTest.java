@@ -73,17 +73,17 @@ public class TikaResourceApiTest extends CXFTestBase{
     private static final String TIKA_PATH = "/tika";
     private static final int UNPROCESSEABLE = 422;
     
-    @Before
-    public void setup() {
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        List providers = new ArrayList();
-        providers.add(provider);
-        
-        api = JAXRSClientFactory.create("https://localhost:9998", TikaResourceApi.class, providers);
-        org.apache.cxf.jaxrs.client.Client client = WebClient.client(api);
-        
-        ClientConfiguration config = WebClient.getConfig(client); 
-    }
+//    @Before
+//    public void setup() {
+//        JacksonJsonProvider provider = new JacksonJsonProvider();
+//        List providers = new ArrayList();
+//        providers.add(provider);
+//        
+//        api = JAXRSClientFactory.create("https://localhost:9998", TikaResourceApi.class, providers);
+//        org.apache.cxf.jaxrs.client.Client client = WebClient.client(api);
+//        
+//        ClientConfiguration config = WebClient.getConfig(client); 
+//    }
 
     @Override
     protected void setUpResources(JAXRSServerFactoryBean sf) {

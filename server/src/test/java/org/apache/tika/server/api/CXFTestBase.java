@@ -121,7 +121,7 @@ public abstract class CXFTestBase {
     }
 
     protected InputStream getTikaConfigInputStream() {
-        return getClass().getResourceAsStream("tika-config-for-server-tests.xml");
+        return this.getClass().getClassLoader().getResourceAsStream("tika-config-for-server-tests.xml");
     }
 
     /**
