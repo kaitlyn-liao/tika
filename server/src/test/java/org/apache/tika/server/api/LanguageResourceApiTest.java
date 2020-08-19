@@ -30,6 +30,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -97,6 +98,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
 
 	}
 
+	@Ignore("Skip until relevant resource is implemented.")
 	@Test
 	public void testDetectEnglishString() throws Exception {
 		String url = endPoint + LANG_STRING_PATH;
@@ -108,6 +110,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
 		assertEquals("en", readLang);
 	}
 
+	@Ignore("Skip until relevant resource is implemented.")
 	@Test
 	public void testDetectFrenchString() throws Exception {
 		String url = endPoint + LANG_STRING_PATH;
@@ -119,6 +122,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
 		assertEquals("fr", readLang);
 	}
 
+	@Ignore("Skip until relevant resource is implemented.")
 	@Test
 	public void testDetectEnglishFile() throws Exception {
 		String url = endPoint + LANG_STREAM_PATH;
@@ -131,6 +135,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
 		assertEquals("en", readLang);
 	}
 
+	@Ignore("Skip until relevant resource is implemented.")
 	@Test
 	public void testDetectFrenchFile() throws Exception {
 		String url = endPoint + LANG_STREAM_PATH;
@@ -142,7 +147,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
 				.getEntity());
 		assertEquals("fr", readLang);
 	}
-    
+
     /**
      * POST a UTF-8 text file to the LanguageIdentifier to identify its language.
      *
@@ -151,6 +156,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+	@Ignore("Skip until relevant resource is implemented.")
     @Test
     public void postLanguageStreamTest() {
         //String response = api.postLanguageStream();
@@ -168,6 +174,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+	@Ignore("Skip until relevant resource is implemented.")
     @Test
     public void postLanguageStringTest() {
         //String response = api.postLanguageString();
@@ -185,6 +192,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+	@Ignore("Skip until relevant resource is implemented.")
     @Test
     public void putLanguageStreamTest() {
         //String response = api.putLanguageStream();
@@ -202,6 +210,7 @@ public class LanguageResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+	@Ignore("Skip until relevant resource is implemented.")
     @Test
     public void putLanguageStringTest() {
         //String response = api.putLanguageString();

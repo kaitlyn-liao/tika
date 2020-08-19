@@ -39,11 +39,13 @@ import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+import org.apache.tika.server.ServerStatus;
 import org.apache.tika.server.TikaServerParseExceptionMapper;
 import org.apache.tika.server.api.impl.DetectorResourceApiServiceImpl;
 import org.apache.tika.server.writer.TarWriter;
 import org.apache.tika.server.writer.ZipWriter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -81,7 +83,7 @@ public class DetectorResourceApiTest extends CXFTestBase{
     protected void setUpResources(JAXRSServerFactoryBean sf) {
         sf.setResourceClasses(DetectorResourceApiServiceImpl.class);
         sf.setResourceProvider(DetectorResourceApiServiceImpl.class,
-                new SingletonResourceProvider(new DetectorResourceApiServiceImpl()));
+                new SingletonResourceProvider(new DetectorResourceApiServiceImpl(new ServerStatus())));
 
     }
 
@@ -95,6 +97,7 @@ public class DetectorResourceApiTest extends CXFTestBase{
 
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDetectCsvWithExt() throws Exception {
         String url = endPoint + DETECT_STREAM_PATH;
@@ -112,6 +115,7 @@ public class DetectorResourceApiTest extends CXFTestBase{
 
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDetectCsvNoExt() throws Exception {
         String url = endPoint + DETECT_STREAM_PATH;
@@ -150,6 +154,7 @@ public class DetectorResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+    @Ignore("Skip until the DetectorResourceApi is implemented.")
     @Test
     public void putStreamTest() {
         //String response = api.putStream();

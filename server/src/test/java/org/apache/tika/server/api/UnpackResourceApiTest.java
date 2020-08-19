@@ -49,6 +49,7 @@ import org.apache.tika.server.writer.TarWriter;
 import org.apache.tika.server.api.impl.UnpackResourceApiServiceImpl;
 import org.apache.tika.server.writer.ZipWriter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -123,6 +124,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         sf.setProviders(providers);
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDocWAV() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -135,6 +137,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertFalse(data.containsKey(UnpackResourceApiServiceImpl.TEXT_FILENAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDocWAVText() throws Exception {
         Response response = WebClient.create(endPoint + ALL_PATH)
@@ -147,6 +150,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertTrue(data.containsKey(UnpackResourceApiServiceImpl.TEXT_FILENAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDocPicture() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -158,6 +162,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(JPG_MD5, data.get(JPG_NAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testDocPictureNoOle() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -168,6 +173,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(JPG2_MD5, data.get(JPG2_NAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testImageDOCX() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -179,6 +185,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(DOCX_IMAGE2_MD5, data.get(DOCX_IMAGE2_NAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void test415() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -189,6 +196,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(415, response.getStatus());
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testExeDOCX() throws Exception {
         String TEST_DOCX_EXE = "2exe.docx";
@@ -202,6 +210,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(DOCX_EXE2_MD5, data.get(DOCX_EXE2_NAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testImageXSL() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -213,6 +222,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(XSL_IMAGE2_MD5, data.get("1.jpg"));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testTarDocPicture() throws Exception {
         Response response = WebClient.create(endPoint + UNPACKER_PATH)
@@ -224,6 +234,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
         assertEquals(JPG_MD5, data.get(JPG_NAME));
     }
 
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void testText() throws Exception {
         Response response = WebClient.create(endPoint + ALL_PATH)
@@ -244,6 +255,7 @@ public class UnpackResourceApiTest extends CXFTestBase{
      * @throws ApiException
      *          if the Api call fails
      */
+    @Ignore("Skip until relevant resource is implemented.")
     @Test
     public void putUnpackTest() {
         //String response = api.putUnpack();
