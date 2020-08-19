@@ -18,18 +18,10 @@
   <url>http://tika.apache.org/</url>
 
   <properties>
-    <!-- From OpenAPI Generator-->
-    <java.version>1.7</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <swagger-core-version>1.5.22</swagger-core-version>
+    <swagger-core-version>1.5.24</swagger-core-version>
     <jetty-version>9.2.9.v20150224</jetty-version>
-    <junit-version>4.13</junit-version>
-    <logback-version>1.1.7</logback-version>
-    <servlet-api-version>2.5</servlet-api-version>
+    <logback-version>1.2.3</logback-version>
     <beanvalidation-version>1.1.0.Final</beanvalidation-version>
-    <!--cxf.version>3.3.0</cxf.version-->
-    <jackson-jaxrs-version>2.9.9</jackson-jaxrs-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -159,6 +151,28 @@
       <artifactId>swagger-jaxrs</artifactId>
       <scope>compile</scope>
       <version>${swagger-core-version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -210,17 +224,29 @@
         <artifactId>cxf-rt-wsdl</artifactId>
         <version>${cxf.version}</version>
         <scope>compile</scope>
+        <exclusions>
+            <exclusion>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
         <groupId>com.fasterxml.jackson.jaxrs</groupId>
         <artifactId>jackson-jaxrs-json-provider</artifactId>
-        <version>${jackson-jaxrs-version}</version>
+        <version>${jackson.version}</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-joda</artifactId>
-        <version>${jackson-jaxrs-version}</version>
+        <version>${jackson.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>joda-time</groupId>
+          <artifactId>joda-time</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
@@ -441,37 +467,37 @@
     </plugin>
     </plugins>
     <pluginManagement>
-    	<plugins>
-    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    		<plugin>
-    			<groupId>org.eclipse.m2e</groupId>
-    			<artifactId>lifecycle-mapping</artifactId>
-    			<version>1.0.0</version>
-    			<configuration>
-    				<lifecycleMappingMetadata>
-    					<pluginExecutions>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>org.codehaus.mojo</groupId>
-    								<artifactId>
-    									build-helper-maven-plugin
-    								</artifactId>
-    								<versionRange>
-    									[1.9.1,)
-    								</versionRange>
-    								<goals>
-    									<goal>add-source</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore></ignore>
-    							</action>
-    						</pluginExecution>
-    					</pluginExecutions>
-    				</lifecycleMappingMetadata>
-    			</configuration>
-    		</plugin>
-    	</plugins>
+        <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.codehaus.mojo</groupId>
+                                    <artifactId>
+                                        build-helper-maven-plugin
+                                    </artifactId>
+                                    <versionRange>
+                                        [1.9.1,)
+                                    </versionRange>
+                                    <goals>
+                                        <goal>add-source</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore></ignore>
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+        </plugins>
     </pluginManagement>
   </build>
 

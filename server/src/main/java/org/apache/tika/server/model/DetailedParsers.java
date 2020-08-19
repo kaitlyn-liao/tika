@@ -14,24 +14,24 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-import org.apache.tika.server.model.DefaultDetectorChildren;
+import org.apache.tika.server.model.DetailedParser;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
-  * The entire Tika detector collection.
+  * The entire detailed Tika parser collection including org.apache.tika.parser.DefaultParser
  **/
-@ApiModel(description="The entire Tika detector collection.")
-public class DefaultDetector  {
+@ApiModel(description="The entire detailed Tika parser collection including org.apache.tika.parser.DefaultParser")
+public class DetailedParsers  {
   
-  @ApiModelProperty(value = "An array of Tika detector implementations.")
+  @ApiModelProperty(value = "An array of detailed Tika parser implementations excluding org.apache.tika.parser.DefaultParser")
   @Valid
  /**
-   * An array of Tika detector implementations.
+   * An array of detailed Tika parser implementations excluding org.apache.tika.parser.DefaultParser
   **/
-  private List<DefaultDetectorChildren> children = null;
+  private List<DetailedParser> children = null;
 
   @ApiModelProperty(example = "true", value = "Whether the resource (parser, detector, etc.) composes a result from several other resources.")
  /**
@@ -44,25 +44,31 @@ public class DefaultDetector  {
    * The fully qualified resource name.
   **/
   private String name;
+
+  @ApiModelProperty(example = "true", value = "Whether the resource (parser, detector, etc.) decorates a data stream with custom pre-, post- or error processing functionality.")
  /**
-   * An array of Tika detector implementations.
+   * Whether the resource (parser, detector, etc.) decorates a data stream with custom pre-, post- or error processing functionality.
+  **/
+  private Boolean decorated;
+ /**
+   * An array of detailed Tika parser implementations excluding org.apache.tika.parser.DefaultParser
    * @return children
   **/
   @JsonProperty("children")
-  public List<DefaultDetectorChildren> getChildren() {
+  public List<DetailedParser> getChildren() {
     return children;
   }
 
-  public void setChildren(List<DefaultDetectorChildren> children) {
+  public void setChildren(List<DetailedParser> children) {
     this.children = children;
   }
 
-  public DefaultDetector children(List<DefaultDetectorChildren> children) {
+  public DetailedParsers children(List<DetailedParser> children) {
     this.children = children;
     return this;
   }
 
-  public DefaultDetector addChildrenItem(DefaultDetectorChildren childrenItem) {
+  public DetailedParsers addChildrenItem(DetailedParser childrenItem) {
     this.children.add(childrenItem);
     return this;
   }
@@ -80,7 +86,7 @@ public class DefaultDetector  {
     this.composite = composite;
   }
 
-  public DefaultDetector composite(Boolean composite) {
+  public DetailedParsers composite(Boolean composite) {
     this.composite = composite;
     return this;
   }
@@ -98,8 +104,26 @@ public class DefaultDetector  {
     this.name = name;
   }
 
-  public DefaultDetector name(String name) {
+  public DetailedParsers name(String name) {
     this.name = name;
+    return this;
+  }
+
+ /**
+   * Whether the resource (parser, detector, etc.) decorates a data stream with custom pre-, post- or error processing functionality.
+   * @return decorated
+  **/
+  @JsonProperty("decorated")
+  public Boolean getDecorated() {
+    return decorated;
+  }
+
+  public void setDecorated(Boolean decorated) {
+    this.decorated = decorated;
+  }
+
+  public DetailedParsers decorated(Boolean decorated) {
+    this.decorated = decorated;
     return this;
   }
 
@@ -107,11 +131,12 @@ public class DefaultDetector  {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class DefaultDetector {\n");
+    sb.append("class DetailedParsers {\n");
     
     sb.append("    children: ").append(toIndentedString(children)).append("\n");
     sb.append("    composite: ").append(toIndentedString(composite)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    decorated: ").append(toIndentedString(decorated)).append("\n");
     sb.append("}");
     return sb.toString();
   }

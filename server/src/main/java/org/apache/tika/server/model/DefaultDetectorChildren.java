@@ -1,4 +1,4 @@
-package org.openapitools.model;
+package org.apache.tika.server.model;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -15,13 +15,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DefaultDetectorChildren  {
   
-  @ApiModelProperty(example = "true", value = "")
+  @ApiModelProperty(example = "true", value = "Whether the resource (parser, detector, etc.) composes a result from several other resources.")
+ /**
+   * Whether the resource (parser, detector, etc.) composes a result from several other resources.
+  **/
   private Boolean composite;
 
-  @ApiModelProperty(example = "org.apache.tika.detect.OverrideDetector", value = "")
+  @ApiModelProperty(example = "org.apache.tika.parser.apple.AppleSingleFileParser", value = "The fully qualified resource name.")
+ /**
+   * The fully qualified resource name.
+  **/
   private String name;
  /**
-   * Get composite
+   * Whether the resource (parser, detector, etc.) composes a result from several other resources.
    * @return composite
   **/
   @JsonProperty("composite")
@@ -39,7 +45,7 @@ public class DefaultDetectorChildren  {
   }
 
  /**
-   * Get name
+   * The fully qualified resource name.
    * @return name
   **/
   @JsonProperty("name")

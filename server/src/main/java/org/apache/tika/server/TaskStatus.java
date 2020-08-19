@@ -1,5 +1,3 @@
- package org.apache.tika.server;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,21 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.tika.server;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.Optional;
 
-/**
- * Simple wrapper exception to be thrown for consistent handling
- * of exceptions that can happen during a parse.
- */
-public class TikaServerParseException extends WebApplicationException {
+public class TaskStatus {
+    final ServerStatus.TASK task;
+    final Instant started;
+    final Optional<String> fileName;
 
-    public TikaServerParseException(Response msg) {
-        super(msg);
+    TaskStatus(ServerStatus.TASK task, Instant started, String fileName) {
+        this.task = task;
+        this.started = started;
+        this.fileName = Optional.ofNullable(fileName);
     }
 
-    public TikaServerParseException(Exception e) {
-        super(e);
+
+    @Override
+    public String toString() {
+        return "";
     }
+
 }

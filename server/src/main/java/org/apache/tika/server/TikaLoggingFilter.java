@@ -17,24 +17,34 @@
 
 package org.apache.tika.server;
 
-import org.apache.tika.metadata.Metadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.ext.Provider;
+
 import java.io.IOException;
-import java.io.InputStream;
 
-/**
- * Passthrough -- returns InputStream as is
- */
-public class DefaultInputStreamFactory implements InputStreamFactory {
+@Provider
+@PreMatching
+public class TikaLoggingFilter implements ContainerRequestFilter {
+    private static final Logger LOG = LoggerFactory.getLogger(TikaLoggingFilter.class);
 
-    @Override
-    public InputStream getInputSteam(InputStream is, HttpHeaders httpHeaders) throws IOException {
-        return is;
+    private boolean infoLevel;
+
+    public TikaLoggingFilter(boolean infoLevel) {
+        this.infoLevel = infoLevel;
     }
 
     @Override
-    public InputStream getInputSteam(InputStream is, Metadata metadata, HttpHeaders httpHeaders) throws IOException {
-        return is;
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        String requestUri = requestContext.getUriInfo().getRequestUri().toString();
+        if (infoLevel) {
+            LOG.info("Request URI: {}", requestUri);
+        } else {
+            LOG.debug("Request URI: {}", requestUri);
+        }
     }
 }

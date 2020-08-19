@@ -1,5 +1,3 @@
- package org.apache.tika.server;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,20 +15,31 @@
  * limitations under the License.
  */
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+package org.apache.tika.server.api.impl;
 
-/**
- * Simple wrapper exception to be thrown for consistent handling
- * of exceptions that can happen during a parse.
- */
-public class TikaServerParseException extends WebApplicationException {
+import org.apache.tika.server.ServerStatus;
 
-    public TikaServerParseException(Response msg) {
-        super(msg);
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Path("/status")
+public class TikaServerStatus {
+    private final ServerStatus serverStatus;
+
+    public TikaServerStatus(ServerStatus serverStatus) {
+        this.serverStatus = serverStatus;
     }
 
-    public TikaServerParseException(Exception e) {
-        super(e);
+    @GET
+    @Produces("application/json")
+    public Map<String, Object> getStatus() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("status", serverStatus.getStatus());
+        map.put("millis_since_last_parse_started", serverStatus.getMillisSinceLastParseStarted());
+        map.put("files_processed", serverStatus.getFilesProcessed());
+        return map;
     }
 }

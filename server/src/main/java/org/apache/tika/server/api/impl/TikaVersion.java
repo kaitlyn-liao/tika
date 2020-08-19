@@ -1,5 +1,3 @@
- package org.apache.tika.server;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,20 +15,26 @@
  * limitations under the License.
  */
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+package org.apache.tika.server.api.impl;
 
-/**
- * Simple wrapper exception to be thrown for consistent handling
- * of exceptions that can happen during a parse.
- */
-public class TikaServerParseException extends WebApplicationException {
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
-    public TikaServerParseException(Response msg) {
-        super(msg);
+import org.apache.tika.Tika;
+
+@Path("/version")
+public class TikaVersion {
+    private Tika tika;
+
+    public TikaVersion() {
+        this.tika = new Tika(TikaResourceApiServiceImpl.getConfig());
     }
 
-    public TikaServerParseException(Exception e) {
-        super(e);
+    @GET
+    @Produces("text/plain")
+    public String getVersion() {
+    	TikaResourceApiServiceImpl.checkIsOperating();
+        return tika.toString();
     }
 }

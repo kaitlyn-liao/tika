@@ -1,4 +1,4 @@
- package org.apache.tika.server;
+package org.apache.tika.server;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,20 +17,21 @@
  * limitations under the License.
  */
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import org.apache.tika.metadata.Metadata;
+
+import java.util.List;
 
 /**
- * Simple wrapper exception to be thrown for consistent handling
- * of exceptions that can happen during a parse.
+ * wrapper class to make isWriteable in MetadataListMBW simpler
  */
-public class TikaServerParseException extends WebApplicationException {
+public class MetadataList {
+    private final List<Metadata> metadata;
 
-    public TikaServerParseException(Response msg) {
-        super(msg);
+    public MetadataList(List<Metadata> metadata) {
+        this.metadata = metadata;
     }
 
-    public TikaServerParseException(Exception e) {
-        super(e);
+    public List<Metadata> getMetadata() {
+        return metadata;
     }
 }
