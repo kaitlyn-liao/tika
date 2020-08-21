@@ -1,22 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.apache.tika</groupId>
     <artifactId>tika-parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <relativePath>../tika-parent/pom.xml</relativePath>
   </parent>
-
   <groupId>org.apache.tika</groupId>
   <artifactId>tika-sever</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <!--packaging>war</packaging-->
-
   <name>Apache Tika Server</name>
   <description>The Tika server implements [JAX-RS](http://en.wikipedia.org/wiki/JAX-RS) (Java API for RESTful Web Services) to provide web services according to the Representational State Transfer (REST) architectural style. This facilitates a wide varity oif operations and flexibility with regards to both client and server implementations. The officially supported Tika server implementation is packaged using the OpenAPI [jaxrs-cxf generator](https://openapi-generator.tech/docs/generators/jaxrs-cxf]. This work was tracked through [TIKA-3082](https://issues.apache.org/jira/browse/TIKA-3082). &lt;b&gt;N.B.&lt;/b&gt; the OpenAPI version always tracks the underlying Tika version to remove uncertainty about which version of Tika is running within the server.</description>
   <url>http://tika.apache.org/</url>
-
   <properties>
     <swagger-core-version>1.5.24</swagger-core-version>
     <jetty-version>9.2.9.v20150224</jetty-version>
@@ -24,7 +20,6 @@
     <beanvalidation-version>1.1.0.Final</beanvalidation-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
   <!-- From OpenAPI Generator-->
   <repositories>
     <repository>
@@ -35,7 +30,6 @@
       </snapshots>
     </repository>
   </repositories>
-
   <pluginRepositories>
     <pluginRepository>
       <id>miredot</id>
@@ -43,7 +37,6 @@
       <url>http://nexus.qmino.com/content/repositories/miredot</url>
     </pluginRepository>
   </pluginRepositories>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -109,7 +102,8 @@
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-      <version>2.6</version> <!-- should sync with Jackcess in tika-parsers -->
+      <version>2.6</version>
+      <!-- should sync with Jackcess in tika-parsers -->
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -129,7 +123,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>tika-core</artifactId>
@@ -144,7 +137,6 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-
     <!-- From OpenAPI Generator -->
     <dependency>
       <groupId>io.swagger</groupId>
@@ -193,54 +185,53 @@
     </dependency>
     <!-- Bean Validation API support -->
     <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>${beanvalidation-version}</version>
-        <scope>provided</scope>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${beanvalidation-version}</version>
+      <scope>provided</scope>
     </dependency>
     <!-- CXF Client -->
     <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-rs-client</artifactId>
-        <version>${cxf.version}</version>
-        <scope>test</scope>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-client</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
     </dependency>
-
-     <!-- CXF server -->
+    <!-- CXF server -->
     <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-        <version>${cxf.version}</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-ws-policy</artifactId>
-        <version>${cxf.version}</version>
-        <scope>compile</scope>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+      <version>${cxf.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-wsdl</artifactId>
-        <version>${cxf.version}</version>
-        <scope>compile</scope>
-        <exclusions>
-            <exclusion>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-            </exclusion>
-        </exclusions>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-ws-policy</artifactId>
+      <version>${cxf.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
-        <groupId>com.fasterxml.jackson.jaxrs</groupId>
-        <artifactId>jackson-jaxrs-json-provider</artifactId>
-        <version>${jackson.version}</version>
-        <scope>compile</scope>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-wsdl</artifactId>
+      <version>${cxf.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.ow2.asm</groupId>
+          <artifactId>asm</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-joda</artifactId>
-        <version>${jackson.version}</version>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
+      <version>${jackson.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-joda</artifactId>
+      <version>${jackson.version}</version>
       <exclusions>
         <exclusion>
           <groupId>joda-time</groupId>
@@ -249,7 +240,6 @@
       </exclusions>
     </dependency>
   </dependencies>
-
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
@@ -259,8 +249,7 @@
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <argLine>-da -XX:+HeapDumpOnOutOfMemoryError -Xmx512m</argLine>
           <systemPropertyVariables>
-            <java.util.logging.config.file>
-              ${basedir}/src/main/resources/commons-logging.properties
+            <java.util.logging.config.file>${basedir}/src/main/resources/commons-logging.properties
             </java.util.logging.config.file>
           </systemPropertyVariables>
         </configuration>
@@ -274,8 +263,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <createDependencyReducedPom>
-                false
+              <createDependencyReducedPom>false
               </createDependencyReducedPom>
               <filters>
                 <filter>
@@ -310,7 +298,7 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.apache.tika.server.TikaServerCli</mainClass>
                 </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
                   <resource>META-INF/LICENSE</resource>
                   <file>target/classes/META-INF/LICENSE</file>
@@ -380,7 +368,6 @@
           </excludes>
         </configuration>
       </plugin>
-
       <!--From OpenAPI Generator-->
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -392,53 +379,7 @@
             </goals>
           </execution>
         </executions>
-
       </plugin>
-      <!--plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty-version}</version>
-        <configuration>
-          <webApp>
-            <contextPath>/</contextPath>
-          </webApp>
-          <webAppSourceDirectory>target/${project.artifactId}-${project.version}</webAppSourceDirectory>
-          <stopPort>8079</stopPort>
-          <stopKey>stopit</stopKey>
-          <httpConnector>
-            <port>9998</port>
-            <idleTimeout>60000</idleTimeout>
-          </httpConnector>
-        </configuration>
-        <dependencies>
-          <dependency>
-              <groupId>javax.validation</groupId>
-              <artifactId>validation-api</artifactId>
-              <version>${beanvalidation-version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>start-jetty</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>start</goal>
-            </goals>
-            <configuration>
-              <scanIntervalSeconds>0</scanIntervalSeconds>
-              <daemon>true</daemon>
-            </configuration>
-          </execution>
-          <execution>
-            <id>stop-jetty</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin-->
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -462,45 +403,85 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-           <failOnMissingWebXml>false</failOnMissingWebXml>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
-    </plugin>
+      </plugin>
     </plugins>
     <pluginManagement>
-        <plugins>
-            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-            <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>org.codehaus.mojo</groupId>
-                                    <artifactId>
-                                        build-helper-maven-plugin
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin
                                     </artifactId>
-                                    <versionRange>
-                                        [1.9.1,)
+                    <versionRange>[1.9.1,)
                                     </versionRange>
-                                    <goals>
-                                        <goal>add-source</goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore></ignore>
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
-            </plugin>
-        </plugins>
+                    <goals>
+                      <goal>add-source</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${jetty-version}</version>
+          <configuration>
+            <webApp>
+              <contextPath>/</contextPath>
+            </webApp>
+            <webAppSourceDirectory>target/${project.artifactId}-${project.version}</webAppSourceDirectory>
+            <stopPort>8079</stopPort>
+            <stopKey>stopit</stopKey>
+            <httpConnector>
+              <port>9998</port>
+              <idleTimeout>60000</idleTimeout>
+            </httpConnector>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>javax.validation</groupId>
+              <artifactId>validation-api</artifactId>
+              <version>${beanvalidation-version}</version></dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>start-jetty</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>start</goal>
+              </goals>
+              <configuration>
+                <scanIntervalSeconds>0</scanIntervalSeconds>
+                <daemon>true</daemon>
+              </configuration>
+            </execution>
+            <execution>
+              <id>stop-jetty</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
     </pluginManagement>
   </build>
-
   <profiles>
     <profile>
       <id>server</id>
@@ -541,7 +522,7 @@
                 </restFramework>
               </restModel>
               <output>
-                <html />
+                <html/>
               </output>
               <!-- Free Miredot license key, valid until Jan 31st, 2020 https://issues.apache.org/jira/browse/TIKA-2253 -->
               <licence>cHJvamVjdHxvcmcuYXBhY2hlLnRpa2EudGlrYS1zZXJ2ZXJ8MjAyMC0wMS0zMXx0cnVlfC0xI01Dd0NGRUV5QktCTlBJbXhwLzBvaWxuak1MYkxZQW5XQWhScWdwM0c5aFdWMGpOUFA5MlNFc2pVS1FKZStRPT0=</licence>
@@ -552,7 +533,6 @@
       </build>
     </profile>
   </profiles>
-
   <organization>
     <name>The Apache Software Foundation</name>
     <url>http://www.apache.org</url>

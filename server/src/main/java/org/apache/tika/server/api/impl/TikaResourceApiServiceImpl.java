@@ -50,6 +50,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -440,8 +444,8 @@ public class TikaResourceApiServiceImpl implements TikaResourceApi {
     
     @Override
     public String getTika() {
-    	checkIsOperating();
-    	return GREETING;
+        checkIsOperating();
+        return GREETING;
     }
     
     @POST
@@ -453,10 +457,17 @@ public class TikaResourceApiServiceImpl implements TikaResourceApi {
     }
     
     //this is equivalent to text-main in tika-app
+    @PUT
+    @Path("/tika")
+    @Produces({ "text/plain" })
+    @ApiOperation(value = "PUT returns a greeting stating the server is up.", tags={ "Tika Resource" })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "If successful, this operation returns HTTP status code 200, with the extracted text.", response = String.class),
+        @ApiResponse(code = 500, message = "An error occurred processing the call.") })
     @Override
-	public StreamingOutput putTika(InputStream is, HttpHeaders httpHeaders, UriInfo info) {
-    	return produceTextMain(is, httpHeaders.getRequestHeaders(), info);
-	}
+	public StreamingOutput putTika(InputStream is, @Context HttpHeaders httpHeaders, @Context final UriInfo info) {
+        return produceTextMain(is, httpHeaders.getRequestHeaders(), info);
+    }
 
     //this is equivalent to text-main (Boilerpipe handler) in tika-app
     @POST
